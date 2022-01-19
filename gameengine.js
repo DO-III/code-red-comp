@@ -46,10 +46,88 @@ class GameEngine {
     };
 
     startInput() {
+        //Reference to self because JS.
+        var that = this;
+
         const getXandY = e => ({
             x: e.clientX - this.ctx.canvas.getBoundingClientRect().left,
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top
         });
+
+        //Player input block; all player inputs go here...
+        this.ctx.canvas.addEventListener("keydown", function(e) {
+            console.log(e);
+            switch(e.code) {
+                //Player Movement with WASD
+                case "KeyA":
+                    that.left = true;
+                    break;
+                case "KeyD":
+                    that.right = true;
+                    break;
+                case "KeyW":
+                    that.up = true;
+                    break;
+                case "KeyD":
+                    that.down = true;
+                    break;
+                //Shooting controls with arrow keys.
+                case "ArrowLeft":
+                    that.shootLeft = false;
+                    break;
+                case "ArrowRight":
+                    that.shootRight = false;
+                    break;
+                case "ArrowUp":
+                    that.shootUp = true;
+                    break;
+                case "ArrowDown":
+                    that.shootDown = true;
+                    break;
+                //Pause.
+                case "Escape":
+                    that.escape = true;
+                    break;
+            }
+        }, false);
+
+        //Now to detect key releases. Use same pattern as above...
+        this.ctx.canvas.addEventListener("keyup", function(e) {
+            switch(e.code) {
+                //Player Movement with WASD
+                case "KeyA":
+                    that.left = false;
+                    break;
+                case "KeyD":
+                    that.right = false;
+                    break;
+                case "KeyW":
+                    that.up = false;
+                    break;
+                case "KeyD":
+                    that.down = false;
+                    break;
+                //Shooting controls with arrow keys.
+                case "ArrowLeft":
+                    that.shootLeft = false;
+                    break;
+                case "ArrowRight":
+                    that.shootRight = false;
+                    break;
+                case "ArrowUp":
+                    that.shootUp = true;
+                    break;
+                case "ArrowDown":
+                    that.shootDown = true;
+                    break;
+                //Pause.
+                case "Escape":
+                    that.escape = false;
+                    break;
+            }
+        }, false);
+
+
 
         this.ctx.canvas.addEventListener("mousemove", e => {
             if (this.options.debugging) {
