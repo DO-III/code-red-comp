@@ -56,7 +56,7 @@ class GameEngine {
 
         //Player input block; all player inputs go here...
         this.ctx.canvas.addEventListener("keydown", function(e) {
-            console.log(e);
+        //    console.log(e);
             switch(e.code) {
                 //Player Movement with WASD
                 case "KeyA":
@@ -68,7 +68,7 @@ class GameEngine {
                 case "KeyW":
                     that.up = true;
                     break;
-                case "KeyD":
+                case "KeyS":
                     that.down = true;
                     break;
                 //Shooting controls with arrow keys.
@@ -104,7 +104,7 @@ class GameEngine {
                 case "KeyW":
                     that.up = false;
                     break;
-                case "KeyD":
+                case "KeyS":
                     that.down = false;
                     break;
                 //Shooting controls with arrow keys.
