@@ -1,3 +1,6 @@
+const PG_WIDTH = 100; //Should match player graphic in final.
+const PG_HEIGHT = 100; //Should match player graphic in final.
+
 const PLAYER_MAX_MOVE_SPEED = 5;
 const PLAYER_MOVE_RATE= 1.5;
 const PLAYER_BACK_MOVE_RATE = PLAYER_MOVE_RATE * -1;
@@ -16,18 +19,32 @@ class PlayerShip {
         this.xVelocity = 0; //Change in X between ticks.
         this.yVelocity = 0; //Change in Y between ticks.
 
-        this.pointing = 0; //Zero is directly upwards.
+
+        this.angle;         //Direction player points in, 0 is straight up.
 
     }
     
     draw(ctx) {
-        ctx.drawImage(this.imageAsset, this.x, this.y);
+
+        var myCanvas = document.createElement('canvas');
+        myCanvas.width = PG_WIDTH;
+        myCanvas.height = PG_HEIGHT;
+        var myCtx = myCanvas.getContext('2d');
+        myCtx.save();
+        myCtx.translate (PG_WIDTH / 2, PG_HEIGHT / 2);
+        myCtx.rotate (Math.PI / 2);
+        myCtx.translate (-(PG_WIDTH / 2), -(PG_HEIGHT / 2));
+        myCtx.drawImage(this.imageAsset, 0, 0);
+        myCtx.restore();
+        
+        ctx.drawImage(myCanvas, this.x, this.y);
     }
 
     update() {
         //TODO Get final player graphic so we can do a proper check on edges.
 
         this.moveHandle();
+        this.rotateHandle();
 
     }
 
@@ -63,5 +80,20 @@ class PlayerShip {
 
         this.x *= PLAYER_FRICTION;
         this.y *= PLAYER_FRICTION;
+    }
+
+    /*
+    Handles rotating the player.
+    */
+
+    rotateHandle() {
+        var mouse = this.game.mouse;
+
+        console.log(mouse.x);
+
+
+
+        
+
     }
 }
