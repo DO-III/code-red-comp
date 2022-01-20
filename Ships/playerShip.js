@@ -1,39 +1,53 @@
 const PG_WIDTH = 100; //Should match player graphic in final.
 const PG_HEIGHT = 100; //Should match player graphic in final.
 
-const PLAYER_MAX_MOVE_SPEED = 5;
-const PLAYER_MOVE_RATE= 1.5;
+const PGW_CENTER = PG_WIDTH / 2; //Measures center of player graphic, x-value.
+const PGH_CENTER = PG_HEIGHT / 2; //Center of player graphic, y-value.
+
+const PLAYER_MOVE_RATE= 1.5; //Rate at which player accelerates.
 const PLAYER_BACK_MOVE_RATE = PLAYER_MOVE_RATE * -1;
-const PLAYER_FRICTION = 0.85;
+const PLAYER_FRICTION = 0.85; //Rate at which speed decreases. Lower = slower.
 
 class PlayerShip {
 
+    /*
+    Create the PlayerShip object.
+    */
     constructor(game) {
-        //Initialize element.
+        
         this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Player.png"); //Messy hardcode, fix later.
 
         this.x = 0;
         this.y = 0;
+        this.xCenter = 0;
+        this.yCenter = 0;
+
 
         this.xVelocity = 0; //Change in X between ticks.
         this.yVelocity = 0; //Change in Y between ticks.
 
 
-        this.angle;         //Direction player points in, 0 is straight up.
+        this.angle;         //Direction player points in, 0 is straight up...?
 
     }
     
-    draw(ctx) {
+    /*
+    Draw the PlayerShip.
 
+    Rotates to point to the cursor.
+    */
+    draw(ctx) {
         var myCanvas = document.createElement('canvas');
         myCanvas.width = PG_WIDTH;
         myCanvas.height = PG_HEIGHT;
         var myCtx = myCanvas.getContext('2d');
         myCtx.save();
-        myCtx.translate (PG_WIDTH / 2, PG_HEIGHT / 2);
-        myCtx.rotate (Math.PI / 2);
-        myCtx.translate (-(PG_WIDTH / 2), -(PG_HEIGHT / 2));
+        myCtx.translate (PGW_CENTER, PGH_CENTER); //This should go to the center of the object.
+        this.angle = this.rotateHandle();
+        //myCtx.rotate (Math.PI / 2); //Please don't
+        myCtx.rotate (this.angle);
+        myCtx.translate (-(PGW_CENTER), -(PGH_CENTER));
         myCtx.drawImage(this.imageAsset, 0, 0);
         myCtx.restore();
         
@@ -42,10 +56,8 @@ class PlayerShip {
 
     update() {
         //TODO Get final player graphic so we can do a proper check on edges.
-
         this.moveHandle();
         this.rotateHandle();
-
     }
 
 
@@ -84,16 +96,21 @@ class PlayerShip {
 
     /*
     Handles rotating the player.
-    */
 
+    The player points toward the cursor using trigonometry.
+    Please don't alter the math here unless it's really necessary,
+    it's very finicky and prone to fit-throwing.
+    */
     rotateHandle() {
         var mouse = this.game.mouse;
+        if (mouse == null) {
+            return(0); //If mouse isn't defined yet, don't try to rotate.
+                       //I know this is gross, bear with me.
+        }
 
-        //console.log(mouse.x);
+        var dx = (mouse.x) - (this.x + PGW_CENTER); //Accounting for difference in center of thing.
+        var dy = (mouse.y) - (this.y + PGH_CENTER);
 
-
-
-        
-
+        return (Math.atan2(dy, dx) + (Math.PI / 2));
     }
 }
