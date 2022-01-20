@@ -89,7 +89,7 @@ class PlayerShip {
     rotateHandle() {
         var mouse = this.game.mouse;
 
-        console.log(mouse.x);
+        //console.log(mouse.x);
 
 
 
