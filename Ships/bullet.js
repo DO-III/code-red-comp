@@ -1,8 +1,14 @@
 //Concept of a bullet.
 //Could be subclassed as "PlayerBullet" and "DodgerBullet"...
 
+const BG_WIDTH = 10;
+const BG_HEIGHT = 10;
+
+const BGW_CENTER = BG_WIDTH / 2;
+const BGH_CENTER = BG_HEIGHT / 2;
+
 const BULLET_ASSET = ASSET_MANAGER.getAsset("./Ships/gfx/bullet.png");
-const BULLET_SPEED = 10;
+const BULLET_SPEED = 12;
 
 
 class Bullet {
@@ -41,7 +47,20 @@ class Bullet {
     The bullet should be rotated to match its current direction.
     */
     draw(ctx) {
-        ctx.drawImage(BULLET_ASSET, this.x, this.y);
+        var myCanvas = document.createElement('canvas');
+        myCanvas.width = BG_WIDTH;
+        myCanvas.height = BG_HEIGHT;
+        var myCtx = myCanvas.getContext('2d');
+        myCtx.save();
+        myCtx.translate (BGW_CENTER, BGH_CENTER); //This should go to the center of the object.
+        myCtx.rotate (this.angle + (Math.PI) / 2);
+        myCtx.translate (-(BGW_CENTER), -(BGH_CENTER));
+        myCtx.drawImage(BULLET_ASSET, 0, 0);
+        myCtx.restore();
+
+
+
+        ctx.drawImage(myCanvas, this.x, this.y);
     }
 
     /*
