@@ -62,7 +62,7 @@ class PlayerShip {
 
         this.updateBullets();
         if (this.game.click) {
-            this.shoot();
+            this.shoot(this.game.click);
             this.game.click = false;
         }
     }
@@ -73,11 +73,17 @@ class PlayerShip {
         }
     }
 
-    shoot(){
-        //What is this magic number 12?
-        let currentBullet = (new Bullet(this.game, this.x + 12, this.y));
+    /*
+    Create a bullet given the location of the last click.
 
-        this.game.addEntity(currentBullet);
+    This creates a new Bullet object using the Player's X and Y,
+    and the X and Y coordinates of the last click. Please see
+    bullet.js for more information.
+    */
+    shoot(click){
+        this.game.addEntity(new Bullet(this.game,
+                                      (this.x + PGW_CENTER), 
+                                      (this.y +PGH_CENTER), click.x, click.y));
         
         //this.bullets.push(new Bullet(this.game, this.x + 12, this.y));
     }
