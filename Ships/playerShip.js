@@ -1,5 +1,5 @@
-const PG_WIDTH = 100; //Should match player graphic in final.
-const PG_HEIGHT = 100; //Should match player graphic in final.
+const PG_WIDTH = 50; //Should match player graphic in final.
+const PG_HEIGHT = 50; //Should match player graphic in final.
 
 const PGW_CENTER = PG_WIDTH / 2; //Measures center of player graphic, x-value.
 const PGH_CENTER = PG_HEIGHT / 2; //Center of player graphic, y-value.
@@ -16,7 +16,7 @@ class PlayerShip {
     constructor(game) {
         
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Player.png"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/player.png"); //Messy hardcode, fix later.
 
         this.x = 0;
         this.y = 0;
