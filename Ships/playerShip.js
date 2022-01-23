@@ -1,5 +1,5 @@
-const PG_WIDTH = 50; //Should match player graphic in final.
-const PG_HEIGHT = 50; //Should match player graphic in final.
+const PG_WIDTH = 100; //Should match player graphic in final.
+const PG_HEIGHT = 100; //Should match player graphic in final.
 
 const PGW_CENTER = PG_WIDTH / 2; //Measures center of player graphic, x-value.
 const PGH_CENTER = PG_HEIGHT / 2; //Center of player graphic, y-value.
@@ -16,7 +16,7 @@ class PlayerShip {
     constructor(game) {
         
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/player.png"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Player.png"); //Messy hardcode, fix later.
 
         this.x = 0;
         this.y = 0;
@@ -30,6 +30,7 @@ class PlayerShip {
 
         this.angle;         //Direction player points in, 0 is straight up...?
 
+        this.bullets = [];
     }
     
     /*
@@ -45,11 +46,13 @@ class PlayerShip {
         myCtx.save();
         myCtx.translate (PGW_CENTER, PGH_CENTER); //This should go to the center of the object.
         this.angle = this.rotateHandle();
+        //myCtx.rotate (Math.PI / 2); //Please don't
         myCtx.rotate (this.angle);
         myCtx.translate (-(PGW_CENTER), -(PGH_CENTER));
         myCtx.drawImage(this.imageAsset, 0, 0);
         myCtx.restore();
-        
+
+        this.drawBullets();
         ctx.drawImage(myCanvas, this.x, this.y);
     }
 
@@ -57,8 +60,28 @@ class PlayerShip {
         //TODO Get final player graphic so we can do a proper check on edges.
         this.moveHandle();
         this.rotateHandle();
+
+        this.updateBullets();
     }
 
+    drawBullets(){
+        for(let bullet of this.bullets){
+            bullet.draw();
+        }
+    }
+
+    shoot(){
+        this.bullets.push(new playerWithBullet(this.x + 12, this.y));
+    }
+    updateBullets(){
+        for(let i = this.bullets.length - 1; i>= 0; i--){
+            this.bullet[i].update();
+            // if(this.bullets[i].isOffScreen()){
+            //     this.bullets.splice(i,1);
+            //     break;
+            // }
+        }
+    }
 
     /*
     Control player's movement.
