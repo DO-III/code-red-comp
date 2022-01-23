@@ -29,8 +29,6 @@ class PlayerShip {
 
 
         this.angle;         //Direction player points in, 0 is straight up...?
-
-        this.bullets = [];  //Stores bullets. Why is this needed?
     }
     
     /*
@@ -51,7 +49,6 @@ class PlayerShip {
         myCtx.drawImage(this.imageAsset, 0, 0);
         myCtx.restore();
 
-        this.drawBullets();
         ctx.drawImage(myCanvas, this.x, this.y);
     }
 
@@ -60,16 +57,9 @@ class PlayerShip {
         this.moveHandle();
         this.rotateHandle();
 
-        this.updateBullets();
         if (this.game.click) {
             this.shoot(this.game.click);
             this.game.click = false;
-        }
-    }
-
-    drawBullets(){
-        for(let bullet of this.bullets){
-            bullet.draw();
         }
     }
 
@@ -86,16 +76,6 @@ class PlayerShip {
                                       (this.y +PGH_CENTER), click.x, click.y));
         
         //this.bullets.push(new Bullet(this.game, this.x + 12, this.y));
-    }
-
-    updateBullets(){
-        for(let i = this.bullets.length - 1; i>= 0; i--){
-            this.bullet[i].update();
-            // if(this.bullets[i].isOffScreen()){
-            //     this.bullets.splice(i,1);
-            //     break;
-            // }
-        }
     }
 
     /*
