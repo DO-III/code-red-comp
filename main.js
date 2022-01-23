@@ -2,6 +2,7 @@ const gameEngine = new GameEngine();
 
 const ASSET_MANAGER = new AssetManager();
 ASSET_MANAGER.queueDownload("./Ships/gfx/player.png");
+ASSET_MANAGER.queueDownload("./Ships/gfx/bullet.png");
 //Add all images here.
 
 ASSET_MANAGER.downloadAll(() => {

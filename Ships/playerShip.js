@@ -30,7 +30,7 @@ class PlayerShip {
 
         this.angle;         //Direction player points in, 0 is straight up...?
 
-        this.bullets = [];
+        this.bullets = [];  //Stores bullets. Why is this needed?
     }
     
     /*
@@ -46,7 +46,6 @@ class PlayerShip {
         myCtx.save();
         myCtx.translate (PGW_CENTER, PGH_CENTER); //This should go to the center of the object.
         this.angle = this.rotateHandle();
-        //myCtx.rotate (Math.PI / 2); //Please don't
         myCtx.rotate (this.angle);
         myCtx.translate (-(PGW_CENTER), -(PGH_CENTER));
         myCtx.drawImage(this.imageAsset, 0, 0);
@@ -62,6 +61,10 @@ class PlayerShip {
         this.rotateHandle();
 
         this.updateBullets();
+        if (this.game.click) {
+            this.shoot();
+            this.game.click = false;
+        }
     }
 
     drawBullets(){
@@ -71,8 +74,14 @@ class PlayerShip {
     }
 
     shoot(){
-        this.bullets.push(new playerWithBullet(this.x + 12, this.y));
+        //What is this magic number 12?
+        let currentBullet = (new Bullet(this.game, this.x + 12, this.y));
+
+        this.game.addEntity(currentBullet);
+        
+        //this.bullets.push(new Bullet(this.game, this.x + 12, this.y));
     }
+
     updateBullets(){
         for(let i = this.bullets.length - 1; i>= 0; i--){
             this.bullet[i].update();
