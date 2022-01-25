@@ -12,6 +12,7 @@ class GameEngine {
         // Information on the input
         this.click = null;
         this.mouse = null;
+        this.mousedown = false; //tracking when mouse is down.
         this.wheel = null;
         this.keys = {};
 
@@ -134,6 +135,20 @@ class GameEngine {
                 console.log("MOUSE_MOVE", getXandY(e));
             }
             this.mouse = getXandY(e);
+        });
+
+        this.ctx.canvas.addEventListener("mousedown", e => {
+            if (this.options.debugging) {
+                console.log("MOUSE_DOWN", getXandY(e));
+            }
+            this.mousedown = true;
+        });
+
+        this.ctx.canvas.addEventListener("mouseup", e => {
+            if (this.options.debugging) {
+                console.log("MOUSE_UP", getXandY(e));
+            }
+            this.mousedown = null;
         });
 
         this.ctx.canvas.addEventListener("click", e => {

@@ -8,6 +8,8 @@ const PLAYER_MOVE_RATE= 1.5; //Rate at which player accelerates.
 const PLAYER_BACK_MOVE_RATE = PLAYER_MOVE_RATE * -1;
 const PLAYER_FRICTION = 0.85; //Rate at which speed decreases. Lower = slower.
 
+const PLAYER_FIRING_COOLDOWN = 0.15; //Rate that player is allowed to fire.
+
 class PlayerShip {
 
     /*
@@ -22,14 +24,13 @@ class PlayerShip {
         this.y = 0;
         this.xCenter = 0;
         this.yCenter = 0;
+        this.lastShot = 0;
 
 
         this.xVelocity = 0; //Change in X between ticks.
         this.yVelocity = 0; //Change in Y between ticks.
 
-
         this.angle;         //Direction player points in, 0 is straight up...?
-
     }
     
     /*
@@ -49,16 +50,42 @@ class PlayerShip {
         myCtx.translate (-(PGW_CENTER), -(PGH_CENTER));
         myCtx.drawImage(this.imageAsset, 0, 0);
         myCtx.restore();
-        
+
         ctx.drawImage(myCanvas, this.x, this.y);
     }
 
+    /*
+    Update player's state.
+    */
     update() {
         //TODO Get final player graphic so we can do a proper check on edges.
         this.moveHandle();
         this.rotateHandle();
+        this.lastShot += this.game.clockTick;
+
+        //If mouse exists, is down, and shot not on cooldown, fire.
+        if (this.game.mousedown && this.game.mouse && this.lastShot > PLAYER_FIRING_COOLDOWN) {
+            this.shoot(this.game.mouse);
+            this.lastShot = 0;
+            this.game.click = false;
+        }
+
     }
 
+    /*
+    Create a bullet given the location of the last click.
+
+    This creates a new Bullet object using the Player's X and Y,
+    and the X and Y coordinates of the last click. Please see
+    bullet.js for more information.
+    */
+    shoot(click){
+        this.game.addEntity(new Bullet(this.game,
+                                      (this.x + PGW_CENTER), 
+                                      (this.y +PGH_CENTER), click.x, click.y));
+        
+        //this.bullets.push(new Bullet(this.game, this.x + 12, this.y));
+    }
 
     /*
     Control player's movement.
