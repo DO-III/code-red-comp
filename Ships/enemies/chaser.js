@@ -14,8 +14,6 @@ class Chaser {
     constructor(game) {
         //Initialize element.
         this.myGame = game;
-        //Size of bounding circle.
-        this.radius = 5;
 
     }
     
