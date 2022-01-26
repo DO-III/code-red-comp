@@ -7,7 +7,7 @@ that logically merely glanced it.
 */
 
 
-class EnemyBoundingCircle {
+class BoundingCircle {
     constructor(radius, xCenter, yCenter) {
         Object.assign(this, {radius, xCenter, yCenter});
     }
