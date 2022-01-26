@@ -103,11 +103,6 @@ class PlayerShip {
     This is to give "flow" of movement.
     */
     moveHandle() {
-        //The basic idea is that the player points in the direction they move in
-        //and shoots in the direction the arrow keys press, like a ship.
-
-        //That means we need to rotate the graphic to match the WASD inputs.
-        
         //Calculate the x velocity.
         //This is found by adding "left" to "right"; if both are pressed, no movement.
         this.xVelocity += (
