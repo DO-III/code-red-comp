@@ -11,8 +11,8 @@ const CGW_CENTER = CHASER_WIDTH / 2; //Measures center of graphic, x-value.
 const CGH_CENTER = CHASER_HEIGHT / 2; //Center of graphic, y-value.
 
 const CHASER_RADIUS = 10; //Size of Chaser bounding circle.
-const CHASER_MOVE_RATE = 1.5; //Speed at which Chaser moves.
-const CHASER_FRICTION = 0.9; //Rate at which Chaser loses speed. Lower = slower.
+const CHASER_MOVE_RATE = 0.25; //Speed at which Chaser moves.
+const CHASER_FRICTION = 0.95; //Rate at which Chaser loses speed. Lower = slower.
 
 
 class Chaser {
@@ -25,6 +25,8 @@ class Chaser {
 
         this.x = 100;
         this.y = 100;
+        this.dX = 0;
+        this.dY = 0;
         this.xCenter = 0;
         this.yCenter = 0;
         this.updateCenter();
@@ -45,8 +47,8 @@ class Chaser {
         var myCtx = myCanvas.getContext('2d');
         myCtx.save();
         myCtx.translate (CGW_CENTER, CGH_CENTER); //This should go to the center of the object.
-        //this.angle = this.rotateHandle();
-        //myCtx.rotate (this.angle);
+        this.angle = this.rotateHandle();
+        myCtx.rotate (this.angle);
         myCtx.translate (-(CGW_CENTER), -(CGH_CENTER));
         myCtx.drawImage(this.imageAsset, 0, 0);
         myCtx.restore();
@@ -63,8 +65,14 @@ class Chaser {
         //Get player's location.
         this.playerX = this.player.xCenter;
         this.playerY = this.player.yCenter;
-        
-        
+        //Get current location.
+        this.updateCenter();
+        this.calcMovement(this.xCenter, this.playerX, this.yCenter, this.playerY);
+        this.x += this.dX;
+        this.y += this.dY;
+        this.x *= CHASER_FRICTION;
+        this.y *= CHASER_FRICTION;
+
 
 
     }
@@ -89,4 +97,27 @@ class Chaser {
         this.xCenter = this.x + CGW_CENTER;
         this.yCenter = this.y + CGH_CENTER;
     }
+
+    /*
+    Calculate the vector that will be used to move the bullets.
+
+    Accomplished through the magic of polar coordinates.
+    */
+    calcMovement(p1X, p2X, p1Y, p2Y) {
+        this.angle = Math.atan2(p2Y - p1Y, p2X - p1X);
+        this.dX += Math.cos(this.angle) * CHASER_MOVE_RATE;
+        this.dY += Math.sin(this.angle) * CHASER_MOVE_RATE;
+    }
+
+    rotateHandle() {
+        if (this.player == null) {
+            return(0); //If player doesn't exist, don't rotate.
+        }
+
+        var dx = (this.playerX) - (this.x + CGW_CENTER); //Accounting for difference in center of thing.
+        var dy = (this.playerY) - (this.y + CGH_CENTER);
+
+        return (Math.atan2(dy, dx) + (Math.PI / 2));
+    }
+
 }
