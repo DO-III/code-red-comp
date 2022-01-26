@@ -18,7 +18,7 @@ class PlayerShip {
     constructor(game) {
         
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/player.png"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Player.png"); //Messy hardcode, fix later.
 
         this.x = 0;
         this.y = 0;
