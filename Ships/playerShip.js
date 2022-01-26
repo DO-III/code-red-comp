@@ -7,6 +7,7 @@ const PGH_CENTER = PG_HEIGHT / 2; //Center of player graphic, y-value.
 const PLAYER_MOVE_RATE= 1.5; //Rate at which player accelerates.
 const PLAYER_BACK_MOVE_RATE = PLAYER_MOVE_RATE * -1;
 const PLAYER_FRICTION = 0.85; //Rate at which speed decreases. Lower = slower.
+const PLAYER_RADIUS = 10; //Radius of player.
 
 const PLAYER_FIRING_COOLDOWN = 0.15; //Rate that player is allowed to fire.
 
@@ -24,6 +25,7 @@ class PlayerShip {
         this.y = 0;
         this.xCenter = 0;
         this.yCenter = 0;
+        this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.x, this.y);
         this.lastShot = 0;
 
 
@@ -52,6 +54,12 @@ class PlayerShip {
         myCtx.restore();
 
         ctx.drawImage(myCanvas, this.x, this.y);
+
+        //Debug to show bounding circle, keep out of final release.
+        ctx.beginPath();
+        ctx.arc(this.xCenter, this.yCenter, PLAYER_RADIUS, 0, 2 * Math.PI, false);
+        ctx.stroke();
+
     }
 
     /*
@@ -61,6 +69,7 @@ class PlayerShip {
         //TODO Get final player graphic so we can do a proper check on edges.
         this.moveHandle();
         this.rotateHandle();
+        this.updateBoundingCircle();
         this.lastShot += this.game.clockTick;
 
         //If mouse exists, is down, and shot not on cooldown, fire.
@@ -118,6 +127,18 @@ class PlayerShip {
 
         this.x *= PLAYER_FRICTION;
         this.y *= PLAYER_FRICTION;
+
+        this.updateCenter();
+    }
+
+    /*
+    Update the player's center.
+
+    For the bounding circle.
+    */
+    updateCenter() {
+        this.xCenter = this.x + PGW_CENTER;
+        this.yCenter = this.y + PGH_CENTER;
     }
 
     /*
@@ -139,4 +160,14 @@ class PlayerShip {
 
         return (Math.atan2(dy, dx) + (Math.PI / 2));
     }
+
+    /*
+    Handles the bounding circle.
+
+    This should check if the player is colliding with anything of note.
+    In the Player's case, this is primarily interested in Dodger rounds and enemies.
+    */
+   updateBoundingCircle() {
+        this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.x, this.y);
+   }
 }
