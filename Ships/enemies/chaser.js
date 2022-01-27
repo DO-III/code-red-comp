@@ -62,16 +62,18 @@ class Chaser {
     }
 
     update() {
+        
         //Get player's location.
         this.playerX = this.player.xCenter;
         this.playerY = this.player.yCenter;
         //Get current location.
-        this.updateCenter();
         this.calcMovement(this.xCenter, this.playerX, this.yCenter, this.playerY);
         this.x += this.dX;
         this.y += this.dY;
         this.x *= CHASER_FRICTION;
         this.y *= CHASER_FRICTION;
+        this.updateCenter();
+        
     }
 
     /*

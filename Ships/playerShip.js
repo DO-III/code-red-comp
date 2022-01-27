@@ -29,6 +29,8 @@ class PlayerShip {
         this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.xCenter, this.yCenter);
         this.lastShot = 0;
 
+        this.dead = false;
+
 
         this.xVelocity = 0; //Change in X between ticks.
         this.yVelocity = 0; //Change in Y between ticks.
@@ -42,6 +44,12 @@ class PlayerShip {
     Rotates to point to the cursor.
     */
     draw(ctx) {
+
+        if(this.dead) {
+            console.log("deadness");
+        }
+
+
         var myCanvas = document.createElement('canvas');
         myCanvas.width = PG_WIDTH;
         myCanvas.height = PG_HEIGHT;
@@ -68,9 +76,10 @@ class PlayerShip {
     */
     update() {
         //TODO Get final player graphic so we can do a proper check on edges.
-        this.checkForCollisions();
+        
         this.moveHandle();
         this.rotateHandle();
+        this.checkForCollisions();
         this.lastShot += this.game.clockTick;
 
         //If mouse exists, is down, and shot not on cooldown, fire.
@@ -170,18 +179,18 @@ class PlayerShip {
       var that = this;
 
       this.game.entities.forEach(function (entity) {
+          /*
+          Check if thing has bounding circle.
+          If so, make sure it's not the player.
+          If that's true, actually detect collision.
+          */
           if(!(typeof entity.BoundingCircle === 'undefined') && !(entity instanceof PlayerShip)
             && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
-                console.log(entity.BoundingCircle); 
+                that.dead = true;
           }
-          //console.log(entity) 
-          /*
-          if (!(typeof entity.BoundingCircle === 'undefined') && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
-            console.log("Boop!");
-            console.log("Player:", entity.BoundingCircle.xCenter, entity.BoundingCircle.yCenter);
-            console.log("Enemy:", that.BoundingCircle.xCenter, that.BoundingCircle.yCenter);
+          else {
+                that.dead = false
           }
-          */
       })
    }
 }
