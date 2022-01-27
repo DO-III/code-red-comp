@@ -116,8 +116,26 @@ class PlayerShip {
 
         //Calculate differences and change position.
         this.x += this.xVelocity;
-        this.y += this.yVelocity;
+        /*if (this.x < 0 || this.x > 650) {
+            this.xVelocity = 0;
+        }*/
+        if (this.x < 0) {
+            this.x = 0;
+        }
+        if (this.x > 650) {
+            this.x = 650;
+        }
 
+        this.y += this.yVelocity; 
+        /*if (this.y < 0 || this.y > 650) {
+            this.yVelocity = 0;
+        }*/
+        if (this.y < 0) {
+            this.y = 0;
+        }
+        if (this.y > 650) {
+            this.y = 650;
+        }
         //Calculate friction.
 
         this.x *= PLAYER_FRICTION;
