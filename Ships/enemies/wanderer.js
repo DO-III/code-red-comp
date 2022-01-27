@@ -26,7 +26,7 @@ class Wanderer {
         this.xCenter = 0;
         this.yCenter = 0;
         this.updateCenter();
-        this.BoundingCircle = new BoundingCircle(WANDERER_RADIUS, this.x, this.y);
+        this.BoundingCircle = new BoundingCircle(WANDERER_RADIUS, this.xCenter, this.yCenter);
 
         //Pick a random direction and start moving.
         this.angle = Math.random() * Math.PI * 2; //Random angle.
@@ -51,7 +51,7 @@ class Wanderer {
 
         //Debug to show bounding circle, keep out of final release.
         ctx.beginPath();
-        ctx.arc(this.xCenter, this.yCenter, WANDERER_RADIUS, 0, 2 * Math.PI, false);
+        ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, WANDERER_RADIUS, 0, 2 * Math.PI, false);
         ctx.stroke();
     }
 
@@ -64,13 +64,14 @@ class Wanderer {
     }
 
     /*
-    Update the Chaser's center.
+    Update the Wanderer's center.
 
     For the bounding circle.
     */
     updateCenter() {
         this.xCenter = this.x + WGW_CENTER;
         this.yCenter = this.y + WGH_CENTER;
+        this.BoundingCircle = new BoundingCircle(WANDERER_RADIUS, this.xCenter, this.yCenter);
     }
 
     collideLeft() {

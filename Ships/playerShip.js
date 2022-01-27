@@ -25,7 +25,8 @@ class PlayerShip {
         this.y = 0;
         this.xCenter = 0;
         this.yCenter = 0;
-        this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.x, this.y);
+        this.updateCenter();
+        this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.xCenter, this.yCenter);
         this.lastShot = 0;
 
 
@@ -57,7 +58,7 @@ class PlayerShip {
 
         //Debug to show bounding circle, keep out of final release.
         ctx.beginPath();
-        ctx.arc(this.xCenter, this.yCenter, PLAYER_RADIUS, 0, 2 * Math.PI, false);
+        ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, PLAYER_RADIUS, 0, 2 * Math.PI);
         ctx.stroke();
 
     }
@@ -67,9 +68,9 @@ class PlayerShip {
     */
     update() {
         //TODO Get final player graphic so we can do a proper check on edges.
+        this.checkForCollisions();
         this.moveHandle();
         this.rotateHandle();
-        this.updateBoundingCircle();
         this.lastShot += this.game.clockTick;
 
         //If mouse exists, is down, and shot not on cooldown, fire.
@@ -124,6 +125,7 @@ class PlayerShip {
         this.y *= PLAYER_FRICTION;
 
         this.updateCenter();
+        
     }
 
     /*
@@ -134,6 +136,7 @@ class PlayerShip {
     updateCenter() {
         this.xCenter = this.x + PGW_CENTER;
         this.yCenter = this.y + PGH_CENTER;
+        this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.xCenter, this.yCenter);
     }
 
     /*
@@ -156,13 +159,29 @@ class PlayerShip {
         return (Math.atan2(dy, dx) + (Math.PI / 2));
     }
 
-    /*
-    Handles the bounding circle.
+   /*
+   Handle collisions with various objects.
 
-    This should check if the player is colliding with anything of note.
-    In the Player's case, this is primarily interested in Dodger rounds and enemies.
-    */
-   updateBoundingCircle() {
-        this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.x, this.y);
+   This should primarily check for collisions with enemies.
+   Later, it could be extended to deal with items or whatnot.
+   */
+   checkForCollisions() {
+
+      var that = this;
+
+      this.game.entities.forEach(function (entity) {
+          if(!(typeof entity.BoundingCircle === 'undefined') && !(entity instanceof PlayerShip)
+            && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
+                console.log(entity.BoundingCircle); 
+          }
+          //console.log(entity) 
+          /*
+          if (!(typeof entity.BoundingCircle === 'undefined') && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
+            console.log("Boop!");
+            console.log("Player:", entity.BoundingCircle.xCenter, entity.BoundingCircle.yCenter);
+            console.log("Enemy:", that.BoundingCircle.xCenter, that.BoundingCircle.yCenter);
+          }
+          */
+      })
    }
 }
