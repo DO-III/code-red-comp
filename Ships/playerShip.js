@@ -46,7 +46,8 @@ class PlayerShip {
     draw(ctx) {
 
         if(this.dead) {
-            console.log("deadness");
+            console.log("Player dead flag raised.");
+            this.dead = false;
         }
 
 
@@ -188,9 +189,11 @@ class PlayerShip {
             && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
                 that.dead = true;
           }
+          /*
           else {
                 that.dead = false
           }
+          */
       })
    }
 }
