@@ -25,8 +25,11 @@ class PlayerShip {
         this.y = 0;
         this.xCenter = 0;
         this.yCenter = 0;
-        this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.x, this.y);
+        this.updateCenter();
+        this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.xCenter, this.yCenter);
         this.lastShot = 0;
+
+        this.dead = false;
 
 
         this.xVelocity = 0; //Change in X between ticks.
@@ -41,6 +44,13 @@ class PlayerShip {
     Rotates to point to the cursor.
     */
     draw(ctx) {
+
+        if(this.dead) {
+            console.log("Player dead flag raised.");
+            this.dead = false;
+        }
+
+
         var myCanvas = document.createElement('canvas');
         myCanvas.width = PG_WIDTH;
         myCanvas.height = PG_HEIGHT;
@@ -57,7 +67,7 @@ class PlayerShip {
 
         //Debug to show bounding circle, keep out of final release.
         ctx.beginPath();
-        ctx.arc(this.xCenter, this.yCenter, PLAYER_RADIUS, 0, 2 * Math.PI, false);
+        ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, PLAYER_RADIUS, 0, 2 * Math.PI);
         ctx.stroke();
 
     }
@@ -67,9 +77,10 @@ class PlayerShip {
     */
     update() {
         //TODO Get final player graphic so we can do a proper check on edges.
+        
         this.moveHandle();
         this.rotateHandle();
-        this.updateBoundingCircle();
+        this.checkForCollisions();
         this.lastShot += this.game.clockTick;
 
         //If mouse exists, is down, and shot not on cooldown, fire.
@@ -124,6 +135,7 @@ class PlayerShip {
         this.y *= PLAYER_FRICTION;
 
         this.updateCenter();
+        
     }
 
     /*
@@ -134,6 +146,7 @@ class PlayerShip {
     updateCenter() {
         this.xCenter = this.x + PGW_CENTER;
         this.yCenter = this.y + PGH_CENTER;
+        this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.xCenter, this.yCenter);
     }
 
     /*
@@ -156,13 +169,31 @@ class PlayerShip {
         return (Math.atan2(dy, dx) + (Math.PI / 2));
     }
 
-    /*
-    Handles the bounding circle.
+   /*
+   Handle collisions with various objects.
 
-    This should check if the player is colliding with anything of note.
-    In the Player's case, this is primarily interested in Dodger rounds and enemies.
-    */
-   updateBoundingCircle() {
-        this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.x, this.y);
+   This should primarily check for collisions with enemies.
+   Later, it could be extended to deal with items or whatnot.
+   */
+   checkForCollisions() {
+
+      var that = this;
+
+      this.game.entities.forEach(function (entity) {
+          /*
+          Check if thing has bounding circle.
+          If so, make sure it's not the player.
+          If that's true, actually detect collision.
+          */
+          if(!(typeof entity.BoundingCircle === 'undefined') && !(entity instanceof PlayerShip)
+            && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
+                that.dead = true;
+          }
+          /*
+          else {
+                that.dead = false
+          }
+          */
+      })
    }
 }

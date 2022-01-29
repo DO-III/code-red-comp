@@ -30,7 +30,7 @@ class Chaser {
         this.xCenter = 0;
         this.yCenter = 0;
         this.updateCenter();
-        this.BoundingCircle = new BoundingCircle(CHASER_RADIUS, this.x, this.y);
+        this.BoundingCircle = new BoundingCircle(CHASER_RADIUS, this.xCenter, this.yCenter);
 
 
 
@@ -57,24 +57,23 @@ class Chaser {
 
         //Debug to show bounding circle, keep out of final release.
         ctx.beginPath();
-        ctx.arc(this.xCenter, this.yCenter, CHASER_RADIUS, 0, 2 * Math.PI, false);
+        ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, CHASER_RADIUS, 0, 2 * Math.PI, false);
         ctx.stroke();
     }
 
     update() {
+        
         //Get player's location.
         this.playerX = this.player.xCenter;
         this.playerY = this.player.yCenter;
         //Get current location.
-        this.updateCenter();
         this.calcMovement(this.xCenter, this.playerX, this.yCenter, this.playerY);
         this.x += this.dX;
         this.y += this.dY;
         this.x *= CHASER_FRICTION;
         this.y *= CHASER_FRICTION;
-
-
-
+        this.updateCenter();
+        
     }
 
     /*
@@ -96,6 +95,7 @@ class Chaser {
     updateCenter() {
         this.xCenter = this.x + CGW_CENTER;
         this.yCenter = this.y + CGH_CENTER;
+        this.BoundingCircle = new BoundingCircle(CHASER_RADIUS, this.xCenter, this.yCenter);
     }
 
     /*
