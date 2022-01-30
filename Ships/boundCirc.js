@@ -10,6 +10,7 @@ that logically merely glanced it.
 class BoundingCircle {
     constructor(radius, xCenter, yCenter) {
         Object.assign(this, {radius, xCenter, yCenter});
+        this.dead = true;
     }
 
     /*
@@ -24,6 +25,13 @@ class BoundingCircle {
             return(true);
         }
         return(false);
+    }
+
+
+    isFriendly(other){
+        if(this.collide(other)){
+            this.dead = false;
+        }
     }
 
 }

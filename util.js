@@ -57,3 +57,10 @@ window.requestAnimFrame = (() => {
 const getDistance = (p1, p2) => {
     return sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
 };
+
+// // computes pythagoras' theorem
+// function distance(a, b) {
+//     var dx = a.x - b.x;
+//     var dy = a.y - b.y;
+//     return Math.sqrt(dx * dx + dy * dy);
+// };

@@ -63,6 +63,11 @@ class Bullet {
         ctx.drawImage(myCanvas, this.x, this.y);
     }
 
+    isCollidingWith(obj){
+        return (this.x + 8 > obj.x && this.y + 8 > obj.y
+            && obj.x + 8 > this.x && obj.y + 8 > this.y);
+    }
+
     /*
     Updates the current condition of the bullet.
 

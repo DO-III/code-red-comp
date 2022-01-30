@@ -120,4 +120,12 @@ class Chaser {
         return (Math.atan2(dy, dx) + (Math.PI / 2));
     }
 
+    shoot(click){
+        this.game.addEntity(new Bullet(this.game,
+            (this.x + PGW_CENTER),
+            (this.y +PGH_CENTER), click.x, click.y));
+
+        //this.bullets.push(new Bullet(this.game, this.x + 12, this.y));
+    }
+
 }
