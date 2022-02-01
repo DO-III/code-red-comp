@@ -11,14 +11,14 @@ const CGW_CENTER = CHASER_WIDTH / 2; //Measures center of graphic, x-value.
 const CGH_CENTER = CHASER_HEIGHT / 2; //Center of graphic, y-value.
 
 const CHASER_RADIUS = 10; //Size of Chaser bounding circle.
-const CHASER_MOVE_RATE = 0.25; //Speed at which Chaser moves.
-const CHASER_FRICTION = 0.95; //Rate at which Chaser loses speed. Lower = slower.
+const CHASER_MOVE_RATE = 12.5; //Speed at which Chaser moves.
+const CHASER_FRICTION = 0.97; //Rate at which Chaser loses speed. Lower = slower.
 
 
 class Chaser {
     constructor(game) {
         //Initialize element.
-        this.myGame = game;
+        this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/chaser.png"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
         console.log(this.player);
@@ -70,8 +70,8 @@ class Chaser {
         this.calcMovement(this.xCenter, this.playerX, this.yCenter, this.playerY);
         this.x += this.dX;
         this.y += this.dY;
-        this.x *= CHASER_FRICTION;
-        this.y *= CHASER_FRICTION;
+        this.dX *= CHASER_FRICTION;
+        this.dY *= CHASER_FRICTION;
         this.updateCenter();
         
     }
@@ -104,9 +104,12 @@ class Chaser {
     Accomplished through the magic of polar coordinates.
     */
     calcMovement(p1X, p2X, p1Y, p2Y) {
+        let effectiveMoveRate = CHASER_MOVE_RATE * this.game.clockTick;
+        console.log(this.game.clockTick);
+
         this.angle = Math.atan2(p2Y - p1Y, p2X - p1X);
-        this.dX += Math.cos(this.angle) * CHASER_MOVE_RATE;
-        this.dY += Math.sin(this.angle) * CHASER_MOVE_RATE;
+        this.dX += Math.cos(this.angle) * effectiveMoveRate;
+        this.dY += Math.sin(this.angle) * effectiveMoveRate;
     }
 
     rotateHandle() {

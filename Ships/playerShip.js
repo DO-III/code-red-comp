@@ -4,9 +4,8 @@ const PG_HEIGHT = 50; //Should match player graphic in final.
 const PGW_CENTER = PG_WIDTH / 2; //Measures center of player graphic, x-value.
 const PGH_CENTER = PG_HEIGHT / 2; //Center of player graphic, y-value.
 
-const PLAYER_MOVE_RATE= 1.5; //Rate at which player accelerates.
-const PLAYER_BACK_MOVE_RATE = PLAYER_MOVE_RATE * -1;
-const PLAYER_FRICTION = 0.85; //Rate at which speed decreases. Lower = slower.
+const PLAYER_MOVE_RATE= 75; //Rate at which player accelerates.
+const PLAYER_FRICTION = 0.90; //Rate at which speed decreases. Lower = slower.
 const PLAYER_RADIUS = 10; //Radius of player.
 
 const PLAYER_FIRING_COOLDOWN = 0.15; //Rate that player is allowed to fire.
@@ -21,8 +20,8 @@ class PlayerShip {
         this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Player.png"); //Messy hardcode, fix later.
 
-        this.x = 0;
-        this.y = 0;
+        this.x = 300;
+        this.y = 300;
         this.xCenter = 0;
         this.yCenter = 0;
         this.updateCenter();
@@ -114,25 +113,30 @@ class PlayerShip {
     This is to give "flow" of movement.
     */
     moveHandle() {
+        //Note: commented code 
+        let effectiveMoveRate = PLAYER_MOVE_RATE * this.game.clockTick;
+
         //Calculate the x velocity.
         //This is found by adding "left" to "right"; if both are pressed, no movement.
         this.xVelocity += (
             //Get player's movement in the first place.
-            (this.game.left ? PLAYER_BACK_MOVE_RATE : 0 ) + (this.game.right? PLAYER_MOVE_RATE : 0 )
+            (this.game.left ? (-1 * effectiveMoveRate) : 0 ) + (this.game.right? effectiveMoveRate : 0 )
         );
         //Repeat for y velocity; bearing in mind that "0" is at the top.
         this.yVelocity += (
-            (this.game.up ? PLAYER_BACK_MOVE_RATE : 0 ) + (this.game.down? PLAYER_MOVE_RATE : 0 )
+            (this.game.up ? (-1 * effectiveMoveRate) : 0 ) + (this.game.down? effectiveMoveRate : 0 )
         );
 
-        //Calculate differences and change position.
+        //Calculate differences and change position according to clock tick.
+        //this.x += this.xVelocity * this.game.clockTick;
+        //this.y += this.yVelocity * this.game.clockTick;
         this.x += this.xVelocity;
         this.y += this.yVelocity;
 
         //Calculate friction.
 
-        this.x *= PLAYER_FRICTION;
-        this.y *= PLAYER_FRICTION;
+        this.xVelocity *= PLAYER_FRICTION;
+        this.yVelocity *= PLAYER_FRICTION;
 
         this.updateCenter();
         
