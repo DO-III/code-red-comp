@@ -4,9 +4,8 @@ const PG_HEIGHT = 50; //Should match player graphic in final.
 const PGW_CENTER = PG_WIDTH / 2; //Measures center of player graphic, x-value.
 const PGH_CENTER = PG_HEIGHT / 2; //Center of player graphic, y-value.
 
-const PLAYER_MOVE_RATE= 1.5; //Rate at which player accelerates.
-const PLAYER_BACK_MOVE_RATE = PLAYER_MOVE_RATE * -1;
-const PLAYER_FRICTION = 0.85; //Rate at which speed decreases. Lower = slower.
+const PLAYER_MOVE_RATE= 75; //Rate at which player accelerates.
+const PLAYER_FRICTION = 0.90; //Rate at which speed decreases. Lower = slower.
 const PLAYER_RADIUS = 10; //Radius of player.
 
 const PLAYER_FIRING_COOLDOWN = 0.15; //Rate that player is allowed to fire.
@@ -114,9 +113,8 @@ class PlayerShip {
     This is to give "flow" of movement.
     */
     moveHandle() {
-
-        let effectiveFriction = PLAYER_FRICTION// * this.game.clockTick;
-        let effectiveMoveRate = PLAYER_MOVE_RATE// * this.game.clockTick;
+        //Note: commented code 
+        let effectiveMoveRate = PLAYER_MOVE_RATE * this.game.clockTick;
 
         //Calculate the x velocity.
         //This is found by adding "left" to "right"; if both are pressed, no movement.
@@ -137,8 +135,8 @@ class PlayerShip {
 
         //Calculate friction.
 
-        this.xVelocity *= effectiveFriction;
-        this.yVelocity *= effectiveFriction;
+        this.xVelocity *= PLAYER_FRICTION;
+        this.yVelocity *= PLAYER_FRICTION;
 
         this.updateCenter();
         

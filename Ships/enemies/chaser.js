@@ -12,7 +12,7 @@ const CGH_CENTER = CHASER_HEIGHT / 2; //Center of graphic, y-value.
 
 const CHASER_RADIUS = 10; //Size of Chaser bounding circle.
 const CHASER_MOVE_RATE = 0.25; //Speed at which Chaser moves.
-const CHASER_FRICTION = 0.95; //Rate at which Chaser loses speed. Lower = slower.
+const CHASER_FRICTION = 0.97; //Rate at which Chaser loses speed. Lower = slower.
 
 
 class Chaser {
@@ -70,8 +70,8 @@ class Chaser {
         this.calcMovement(this.xCenter, this.playerX, this.yCenter, this.playerY);
         this.x += this.dX;
         this.y += this.dY;
-        this.x *= CHASER_FRICTION;
-        this.y *= CHASER_FRICTION;
+        this.dX *= CHASER_FRICTION;
+        this.dY *= CHASER_FRICTION;
         this.updateCenter();
         
     }
