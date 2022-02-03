@@ -132,7 +132,7 @@ class Chaser {
     
     If so, this enemy is removed from the game world.
     */
-   checkIfShot() {
+    checkIfShot() {
     var that = this;
 
     this.game.entities.forEach(function (entity) {
