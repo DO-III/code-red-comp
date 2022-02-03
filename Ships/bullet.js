@@ -10,6 +10,8 @@ const BGH_CENTER = BG_HEIGHT / 2;
 const BULLET_ASSET = ASSET_MANAGER.getAsset("./Ships/gfx/bullet.png");
 const BULLET_SPEED = 12;
 
+const BULLET_RADIUS = 3;
+
 
 class Bullet {
     constructor(game, x, y, mouseX, mouseY) {
@@ -18,6 +20,8 @@ class Bullet {
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Bullet.png");
         this.x = x; //X location
         this.y = y; //Y location
+        this.xCenter = 0;
+        this.yCenter = 0;
 
         this.mouseX = mouseX;
         this.mouseY = mouseY;
@@ -26,6 +30,8 @@ class Bullet {
         this.dX;
         this.dY;
         this.calcDXandDY(this.x, this.mouseX, this.y, this.mouseY);
+
+        this.BoundingCircle = (new BoundingCircle(BULLET_RADIUS, this.xCenter, this.yCenter));
 
     }
 
@@ -61,6 +67,10 @@ class Bullet {
 
 
         ctx.drawImage(myCanvas, this.x, this.y);
+        //Debug to show bounding circle, keep out of final release.
+        ctx.beginPath();
+        ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, BULLET_RADIUS, 0, 2 * Math.PI);
+        ctx.stroke();
     }
 
     /*
@@ -74,10 +84,20 @@ class Bullet {
     update() {
         this.x += this.dX;
         this.y += this.dY;
+        this.updateCenter();
 
         //Ugly canvas size hardcode to remove.
         if(this.x < 0 || this.x > 600 || this.y < 0 || this.y > 600) {
             this.removeFromWorld = true;
         }
+    }
+
+    /*
+    Update the center of this object and its bounding box.
+    */
+    updateCenter() {
+        this.xCenter = this.x + BGW_CENTER;
+        this.yCenter = this.y + BGH_CENTER;
+        this.BoundingCircle = new BoundingCircle(BULLET_RADIUS, this.xCenter, this.yCenter);
     }
 }
