@@ -62,6 +62,9 @@ class Chaser {
     }
 
     update() {
+
+        //First - have we been shot?
+        this.checkIfShot();
         
         //Get player's location.
         this.playerX = this.player.xCenter;
@@ -73,6 +76,7 @@ class Chaser {
         this.dX *= CHASER_FRICTION;
         this.dY *= CHASER_FRICTION;
         this.updateCenter();
+        
         
     }
 
@@ -122,5 +126,27 @@ class Chaser {
 
         return (Math.atan2(dy, dx) + (Math.PI / 2));
     }
+
+    /*
+    Has this enemy been shot? If
+    
+    If so, this enemy is removed from the game world.
+    */
+   checkIfShot() {
+    var that = this;
+
+    this.game.entities.forEach(function (entity) {
+        /*
+        Check if thing has bounding circle.
+        If so, make sure it's not the player.
+        If that's true, actually detect collision.
+        */
+        if(!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet)
+          && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
+            entity.removeFromWorld = true;  
+            that.removeFromWorld = true;
+        }
+    })
+ }
 
 }
