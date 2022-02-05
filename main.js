@@ -4,7 +4,7 @@ const ASSET_MANAGER = new AssetManager();
 ASSET_MANAGER.queueDownload("./Ships/gfx/Player.png");
 ASSET_MANAGER.queueDownload("./Ships/gfx/Chaser.svg");
 ASSET_MANAGER.queueDownload("./Ships/gfx/Wanderer.svg");
-ASSET_MANAGER.queueDownload("./Ships/gfx/bullet.png");
+ASSET_MANAGER.queueDownload("./Ships/gfx/Bullet.svg");
 //Add all images here.
 
 ASSET_MANAGER.downloadAll(() => {
