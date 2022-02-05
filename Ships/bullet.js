@@ -1,6 +1,7 @@
 //Concept of a bullet.
 //Could be subclassed as "PlayerBullet" and "DodgerBullet"...
 
+
 const BG_WIDTH = 20;
 const BG_HEIGHT = 20;
 
@@ -86,7 +87,8 @@ class Bullet {
         this.updateCenter();
 
         //Ugly canvas size hardcode to remove.
-        if(this.x < 0 || this.x > 600 || this.y < 0 || this.y > 600) {
+        if(this.xCenter < 0 || this.xCenter > GameConstants.GAME_WORLD_WIDTH || 
+            this.yCenter < 0 || this.yCenter > GameConstants.GAME_WORLD_HEIGHT) {
             this.removeFromWorld = true;
         }
     }

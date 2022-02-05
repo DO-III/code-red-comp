@@ -12,3 +12,6 @@ reducing the number of hardcodes.
 //Mostly used for wall collision detection.
 const GAME_WORLD_HEIGHT = 600;
 const GAME_WORLD_WIDTH = 600;
+class GameConstants {
+    //don't put anything in here unless you really need to.
+}
