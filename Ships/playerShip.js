@@ -4,7 +4,7 @@ const PG_HEIGHT = 50; //Should match player graphic in final.
 const PGW_CENTER = PG_WIDTH / 2; //Measures center of player graphic, x-value.
 const PGH_CENTER = PG_HEIGHT / 2; //Center of player graphic, y-value.
 
-const PLAYER_MOVE_RATE= 75; //Rate at which player accelerates.
+const PLAYER_MOVE_RATE= 65; //Rate at which player accelerates.
 const PLAYER_FRICTION = 0.90; //Rate at which speed decreases. Lower = slower.
 const PLAYER_RADIUS = 10; //Radius of player.
 
@@ -193,11 +193,6 @@ class PlayerShip {
             && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
                 that.dead = true;
           }
-          /*
-          else {
-                that.dead = false
-          }
-          */
       })
    }
 }

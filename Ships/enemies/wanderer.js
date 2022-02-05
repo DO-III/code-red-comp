@@ -16,7 +16,7 @@ const WANDERER_FRICTION = 1; //Rate at which Chaser loses speed. Lower = slower.
 class Wanderer {
     constructor(game) {
         //Initialize element.
-        this.myGame = game;
+        this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/wanderer.png"); //Messy hardcode, fix later.
 
         this.x = 200;
@@ -56,6 +56,9 @@ class Wanderer {
     }
 
     update() {
+        //First off, have we been shot?
+        this.checkIfShot();
+
         //Get current location.
         this.updateCenter();
         this.updateDirection();
@@ -121,4 +124,25 @@ class Wanderer {
         this.angle = (Math.atan2(this.dY, this.dX) + (Math.PI / 2));
     }
 
+    /*
+    Has this enemy been shot?
+    
+    If so, this enemy is removed from the game world.
+    */
+    checkIfShot() {
+        var that = this;
+    
+        this.game.entities.forEach(function (entity) {
+            /*
+            Check if thing has bounding circle.
+            If so, make sure it's not the player.
+            If that's true, actually detect collision.
+            */
+            if(!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet)
+              && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
+                entity.removeFromWorld = true;  
+                that.removeFromWorld = true;
+            }
+        })
+    }
 }
