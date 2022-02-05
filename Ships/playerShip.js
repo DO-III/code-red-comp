@@ -1,12 +1,12 @@
-const PG_WIDTH = 50; //Should match player graphic in final.
-const PG_HEIGHT = 50; //Should match player graphic in final.
+const PG_WIDTH = 70; //Should match player graphic in final.
+const PG_HEIGHT = 70; //Should match player graphic in final.
 
 const PGW_CENTER = PG_WIDTH / 2; //Measures center of player graphic, x-value.
 const PGH_CENTER = PG_HEIGHT / 2; //Center of player graphic, y-value.
 
 const PLAYER_MOVE_RATE= 65; //Rate at which player accelerates.
 const PLAYER_FRICTION = 0.90; //Rate at which speed decreases. Lower = slower.
-const PLAYER_RADIUS = 10; //Radius of player.
+const PLAYER_RADIUS = 15; //Radius of player.
 
 const PLAYER_FIRING_COOLDOWN = 0.15; //Rate that player is allowed to fire.
 
@@ -59,7 +59,7 @@ class PlayerShip {
         this.angle = this.rotateHandle();
         myCtx.rotate (this.angle);
         myCtx.translate (-(PGW_CENTER), -(PGH_CENTER));
-        myCtx.drawImage(this.imageAsset, 0, 0);
+        myCtx.drawImage(this.imageAsset, 10, 10);
         myCtx.restore();
 
         ctx.drawImage(myCanvas, this.x, this.y);
