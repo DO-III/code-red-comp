@@ -13,6 +13,8 @@ const BULLET_SPEED = 7.5;
 
 const BULLET_RADIUS = 3;
 
+//const BulletUtils = new GameConstants();
+
 
 class Bullet {
     constructor(game, x, y, mouseX, mouseY) {
@@ -87,9 +89,10 @@ class Bullet {
         this.updateCenter();
 
         //Ugly canvas size hardcode to remove.
-        if(this.xCenter < 0 || this.xCenter > GameConstants.GAME_WORLD_WIDTH || 
-            this.yCenter < 0 || this.yCenter > GameConstants.GAME_WORLD_HEIGHT) {
+        if(this.xCenter < 0 || this.xCenter > GAME_WORLD_WIDTH || 
+            this.yCenter < 0 || this.yCenter > GAME_WORLD_HEIGHT) {
             this.removeFromWorld = true;
+            console.log('yeet');
         }
     }
 

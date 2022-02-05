@@ -78,7 +78,7 @@ class PlayerShip {
         this.moveHandle();
         this.rotateHandle();
         this.checkForCollisions();
-        this.edgeDetect();
+        //this.edgeDetect();
         this.lastShot += this.game.clockTick;
 
         //If mouse exists, is down, and shot not on cooldown, fire.
@@ -119,11 +119,13 @@ class PlayerShip {
         //This is found by adding "left" to "right"; if both are pressed, no movement.
         this.xVelocity += (
             //Get player's movement in the first place.
-            (this.game.left ? (-1 * effectiveMoveRate) : 0 ) + (this.game.right? effectiveMoveRate : 0 )
+            ((this.game.left && !this.collideLeft()) ? (-1 * effectiveMoveRate) : 0 ) 
+            + ((this.game.right && !this.collideRight())? effectiveMoveRate : 0 )
         );
         //Repeat for y velocity; bearing in mind that "0" is at the top.
         this.yVelocity += (
-            (this.game.up ? (-1 * effectiveMoveRate) : 0 ) + (this.game.down? effectiveMoveRate : 0 )
+            ((this.game.up && !this.collideUp()) ? (-1 * effectiveMoveRate) : 0 ) 
+            + ((this.game.down && !this.collideDown()) ? effectiveMoveRate : 0 )
         );
 
         //Calculate differences and change position according to clock tick.
@@ -132,10 +134,14 @@ class PlayerShip {
         this.x += this.xVelocity;
         this.y += this.yVelocity;
 
+        
+
         //Calculate friction.
 
         this.xVelocity *= PLAYER_FRICTION;
         this.yVelocity *= PLAYER_FRICTION;
+
+        this.edgeDetect();
 
         this.updateCenter();
         
@@ -188,26 +194,36 @@ class PlayerShip {
             If so, make sure it's not the player.
             If that's true, actually detect collision.
             */
-            if(!(typeof entity.BoundingCircle === 'undefined') && !(entity instanceof PlayerShip)
+            if(!(typeof entity.BoundingCircle === 'undefined') && !(entity instanceof PlayerShip || entity instanceof Bullet)
             && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
                 that.dead = true;
             }
         })
     }
 
+    edgeDetect() {
+        if(this.collideLeft() || this.collideRight()) {
+            this.xVelocity *= -1;
+        }
+
+        if(this.collideUp() || this.collideDown()) {
+            this.yVelocity *= -1;
+        }
+    }
+
     collideLeft() {  
-        return((this.xCenter - WANDERER_RADIUS) < 0)
+        return((this.xCenter - PLAYER_RADIUS) < 0)
     }
 
     collideRight() {
-        return((this.xCenter + WANDERER_RADIUS) > 600)
+        return((this.xCenter + PLAYER_RADIUS) > GAME_WORLD_WIDTH)
     }
 
     collideUp() {
-        return((this.yCenter - WANDERER_RADIUS) < 0)
+        return((this.yCenter - PLAYER_RADIUS) < 0)
     }
 
     collideDown() {
-        return((this.yCenter + WANDERER_RADIUS) > 600)
+        return((this.yCenter + PLAYER_RADIUS) > GAME_WORLD_HEIGHT)
     }
 }
