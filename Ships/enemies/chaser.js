@@ -4,13 +4,13 @@ Chasers pursue the player relentlessly with some concept of velocity.
 They move stictly towards the player taking the most direct route possible.
 */
 
-const CHASER_WIDTH = 30; //Should match graphic in final.
-const CHASER_HEIGHT = 30; //Should match graphic in final.
+const CHASER_WIDTH = 75; //Should match graphic in final.
+const CHASER_HEIGHT = 75; //Should match graphic in final.
 
 const CGW_CENTER = CHASER_WIDTH / 2; //Measures center of graphic, x-value.
 const CGH_CENTER = CHASER_HEIGHT / 2; //Center of graphic, y-value.
 
-const CHASER_RADIUS = 10; //Size of Chaser bounding circle.
+const CHASER_RADIUS = 17.5; //Size of Chaser bounding circle.
 const CHASER_MOVE_RATE = 12.5; //Speed at which Chaser moves.
 const CHASER_FRICTION = 0.97; //Rate at which Chaser loses speed. Lower = slower.
 
@@ -19,7 +19,7 @@ class Chaser {
     constructor(game) {
         //Initialize element.
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/chaser.png"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Chaser.svg"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
         console.log(this.player);
 
@@ -50,7 +50,7 @@ class Chaser {
         this.angle = this.rotateHandle();
         myCtx.rotate (this.angle);
         myCtx.translate (-(CGW_CENTER), -(CGH_CENTER));
-        myCtx.drawImage(this.imageAsset, 0, 0);
+        myCtx.drawImage(this.imageAsset, 12, 12);
         myCtx.restore();
 
         ctx.drawImage(myCanvas, this.x, this.y);
