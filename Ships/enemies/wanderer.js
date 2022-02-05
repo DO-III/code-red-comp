@@ -9,7 +9,7 @@ const WGW_CENTER = WANDERER_WIDTH / 2; //Measures center of graphic, x-value.
 const WGH_CENTER = WANDERER_HEIGHT / 2; //Center of graphic, y-value.
 
 const WANDERER_RADIUS = 20; //Size of Wanderer bounding circle.
-const WANDERER_MOVE_RATE = 2.5; //Speed at which Wanderer moves.
+const WANDERER_MOVE_RATE = 0; //Speed at which Wanderer moves.
 const WANDERER_FRICTION = 1; //Rate at which Chaser loses speed. Lower = slower.
 
 
@@ -17,7 +17,7 @@ class Wanderer {
     constructor(game) {
         //Initialize element.
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/wanderer.png"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Wanderer.svg"); //Messy hardcode, fix later.
 
         this.x = 200;
         this.y = 200;
