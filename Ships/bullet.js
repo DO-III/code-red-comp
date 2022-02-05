@@ -1,14 +1,14 @@
 //Concept of a bullet.
 //Could be subclassed as "PlayerBullet" and "DodgerBullet"...
 
-const BG_WIDTH = 10;
-const BG_HEIGHT = 10;
+const BG_WIDTH = 20;
+const BG_HEIGHT = 20;
 
 const BGW_CENTER = BG_WIDTH / 2;
 const BGH_CENTER = BG_HEIGHT / 2;
 
-const BULLET_ASSET = ASSET_MANAGER.getAsset("./Ships/gfx/bullet.png");
-const BULLET_SPEED = 12;
+const BULLET_ASSET = ASSET_MANAGER.getAsset("./Ships/gfx/Bullet.svg");
+const BULLET_SPEED = 7.5;
 
 const BULLET_RADIUS = 3;
 
@@ -17,7 +17,6 @@ class Bullet {
     constructor(game, x, y, mouseX, mouseY) {
         //Initialize element.
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Bullet.png");
         this.x = x; //X location
         this.y = y; //Y location
         this.xCenter = 0;
@@ -61,7 +60,7 @@ class Bullet {
         myCtx.translate (BGW_CENTER, BGH_CENTER); //This should go to the center of the object.
         myCtx.rotate (this.angle + (Math.PI) / 2);
         myCtx.translate (-(BGW_CENTER), -(BGH_CENTER));
-        myCtx.drawImage(BULLET_ASSET, 0, 0);
+        myCtx.drawImage(BULLET_ASSET, 2, 5);
         myCtx.restore();
 
 
