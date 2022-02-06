@@ -100,7 +100,7 @@ class PlayerShip {
     shoot(click){
         this.game.addEntity(new Bullet(this.game,
                                         (this.xCenter - 10), 
-                                        (this.yCenter - 10), click.x, click.y));
+                                        (this.yCenter - 10), click.x - 10, click.y - 10));
         
         //this.bullets.push(new Bullet(this.game, this.x + 12, this.y));
     }
