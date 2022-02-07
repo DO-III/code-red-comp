@@ -99,4 +99,9 @@ class Bullet {
         this.yCenter = this.y + BGH_CENTER;
         this.BoundingCircle = new BoundingCircle(BULLET_RADIUS, this.xCenter, this.yCenter);
     }
+
+
+
+
+
 }

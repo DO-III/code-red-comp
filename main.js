@@ -17,7 +17,7 @@ ASSET_MANAGER.downloadAll(() => {
 	//Messy hardcode. Should later have an entity that manages spawning.
 	gameEngine.addEntity(new Chaser(gameEngine));
 	gameEngine.addEntity(new Wanderer(gameEngine));
-	
+	gameEngine.addEntity(new Splitter(gameEngine));
 
 	gameEngine.start();
 });

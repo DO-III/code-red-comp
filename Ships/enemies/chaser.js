@@ -1,7 +1,7 @@
 /*
 Chasers pursue the player relentlessly with some concept of velocity.
 
-They move stictly towards the player taking the most direct route possible.
+They move strictly towards the player taking the most direct route possible.
 */
 
 const CHASER_WIDTH = 75; //Should match graphic in final.
@@ -41,10 +41,10 @@ class Chaser {
     }
     
     draw(ctx) {
-        var myCanvas = document.createElement('canvas');
+        const myCanvas = document.createElement('canvas');
         myCanvas.width = CHASER_WIDTH;
         myCanvas.height = CHASER_HEIGHT;
-        var myCtx = myCanvas.getContext('2d');
+        const myCtx = myCanvas.getContext('2d');
         myCtx.save();
         myCtx.translate (CGW_CENTER, CGH_CENTER); //This should go to the center of the object.
         this.angle = this.rotateHandle();
