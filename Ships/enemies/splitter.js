@@ -4,8 +4,8 @@ SPLITTERs pursue the player relentlessly with some concept of velocity.
 They move strictly towards the player taking the most direct route possible.
 */
 
-const SPLITTER_WIDTH = 75; //Should match graphic in final.
-const SPLITTER_HEIGHT = 75; //Should match graphic in final.
+const SPLITTER_WIDTH = 45; //Should match graphic in final.
+const SPLITTER_HEIGHT = 45; //Should match graphic in final.
 
 const SGW_CENTER = SPLITTER_WIDTH / 2; //Measures center of graphic, x-value.
 const SGH_CENTER = SPLITTER_HEIGHT / 2; //Center of graphic, y-value.
@@ -21,7 +21,7 @@ class Splitter {
         this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/splitter.png"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
-        console.log(this.player);
+        
 
         this.direction = Math.floor((Math.random()) - 0.5) ? -1 : 1;         //random left or right
         this.turnSpeed = 0.1;
@@ -31,14 +31,15 @@ class Splitter {
         //
         this.x = 300;
         this.y = 300;
+
+        console.log(this.x);
+        console.log(this.y);
         this.dX = 0;
         this.dY = 0;
         this.xCenter = 0;
         this.yCenter = 0;
         this.updateCenter();
         this.BoundingCircle = new BoundingCircle(SPLITTER_RADIUS, this.xCenter, this.yCenter);
-
-        this.calcMovement();
 
         this.playerX = 0;
         this.playerY = 0;
@@ -115,6 +116,8 @@ class Splitter {
     // }
 
     draw(ctx) {
+
+
         const myCanvas = document.createElement('canvas');
         myCanvas.width = SPLITTER_WIDTH;
         myCanvas.height = SPLITTER_HEIGHT;
@@ -148,7 +151,7 @@ class Splitter {
 
     calcMovement(X1, X2, Y1, Y2) {
         let effectiveMoveRate = SPLITTER_MOVE_RATE * this.game.clockTick;
-        console.log(this.game.clockTick);
+        //console.log(this.game.clockTick);
 
         this.angle = Math.atan2(Y2 - Y1, X2 - X1);
         this.dX += Math.cos(this.angle) * effectiveMoveRate;
