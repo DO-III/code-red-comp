@@ -92,7 +92,6 @@ class Bullet {
         if(this.xCenter < 0 || this.xCenter > GAME_WORLD_WIDTH || 
             this.yCenter < 0 || this.yCenter > GAME_WORLD_HEIGHT) {
             this.removeFromWorld = true;
-            console.log('yeet');
         }
     }
 
