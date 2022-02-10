@@ -49,7 +49,7 @@ class PlayerShip {
     draw(ctx) {
 
         if(this.dead) {
-            console.log("Player dead flag raised.");
+            console.log("Player has died.");
             this.dead = false;
         }
 
