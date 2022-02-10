@@ -36,7 +36,7 @@ class PlayerShip {
 
         this.angle;         //Direction player points in, 0 is straight up...?
     }
-    
+
     /*
     Draw the PlayerShip.
 
@@ -75,11 +75,10 @@ class PlayerShip {
     Update player's state.
     */
     update() {
-        //TODO Get final player graphic so we can do a proper check on edges.
-        
         this.moveHandle();
         this.rotateHandle();
         this.checkForCollisions();
+        //this.edgeDetect();
         this.lastShot += this.game.clockTick;
 
         //If mouse exists, is down, and shot not on cooldown, fire.
@@ -100,8 +99,8 @@ class PlayerShip {
     */
     shoot(click){
         this.game.addEntity(new Bullet(this.game,
-                                      (this.xCenter - 10), 
-                                      (this.yCenter - 10), click.x, click.y));
+                                        (this.xCenter - 10), 
+                                        (this.yCenter - 10), click.x - 10, click.y - 10));
         
         //this.bullets.push(new Bullet(this.game, this.x + 12, this.y));
     }
@@ -120,11 +119,13 @@ class PlayerShip {
         //This is found by adding "left" to "right"; if both are pressed, no movement.
         this.xVelocity += (
             //Get player's movement in the first place.
-            (this.game.left ? (-1 * effectiveMoveRate) : 0 ) + (this.game.right? effectiveMoveRate : 0 )
+            ((this.game.left && !this.collideLeft()) ? (-1 * effectiveMoveRate) : 0 ) 
+            + ((this.game.right && !this.collideRight())? effectiveMoveRate : 0 )
         );
         //Repeat for y velocity; bearing in mind that "0" is at the top.
         this.yVelocity += (
-            (this.game.up ? (-1 * effectiveMoveRate) : 0 ) + (this.game.down? effectiveMoveRate : 0 )
+            ((this.game.up && !this.collideUp()) ? (-1 * effectiveMoveRate) : 0 ) 
+            + ((this.game.down && !this.collideDown()) ? effectiveMoveRate : 0 )
         );
 
         //Calculate differences and change position according to clock tick.
@@ -133,10 +134,14 @@ class PlayerShip {
         this.x += this.xVelocity;
         this.y += this.yVelocity;
 
+        
+
         //Calculate friction.
 
         this.xVelocity *= PLAYER_FRICTION;
         this.yVelocity *= PLAYER_FRICTION;
+
+        this.edgeDetect();
 
         this.updateCenter();
         
@@ -164,7 +169,7 @@ class PlayerShip {
         var mouse = this.game.mouse;
         if (mouse == null) {
             return(0); //If mouse isn't defined yet, don't try to rotate.
-                       //I know this is gross, bear with me.
+                        //I know this is gross, bear with me.
         }
 
         var dx = (mouse.x) - (this.x + PGW_CENTER); //Accounting for difference in center of thing.
@@ -173,26 +178,52 @@ class PlayerShip {
         return (Math.atan2(dy, dx) + (Math.PI / 2));
     }
 
-   /*
-   Handle collisions with various objects.
+    /*
+    Handle collisions with various objects.
 
-   This should primarily check for collisions with enemies.
-   Later, it could be extended to deal with items or whatnot.
-   */
-   checkForCollisions() {
+    This should primarily check for collisions with enemies.
+    Later, it could be extended to deal with items or whatnot.
+    */
+    checkForCollisions() {
 
-      var that = this;
+        var that = this;
 
-      this.game.entities.forEach(function (entity) {
-          /*
-          Check if thing has bounding circle.
-          If so, make sure it's not the player.
-          If that's true, actually detect collision.
-          */
-          if(!(typeof entity.BoundingCircle === 'undefined') && !(entity instanceof PlayerShip)
+        this.game.entities.forEach(function (entity) {
+            /*
+            Check if thing has bounding circle.
+            If so, make sure it's not the player.
+            If that's true, actually detect collision.
+            */
+            if(!(typeof entity.BoundingCircle === 'undefined') && !(entity instanceof PlayerShip || entity instanceof Bullet)
             && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
                 that.dead = true;
-          }
-      })
-   }
+            }
+        })
+    }
+
+    edgeDetect() {
+        if(this.collideLeft() || this.collideRight()) {
+            this.xVelocity *= -1;
+        }
+
+        if(this.collideUp() || this.collideDown()) {
+            this.yVelocity *= -1;
+        }
+    }
+
+    collideLeft() {  
+        return((this.xCenter - PLAYER_RADIUS) < 0)
+    }
+
+    collideRight() {
+        return((this.xCenter + PLAYER_RADIUS) > GAME_WORLD_WIDTH)
+    }
+
+    collideUp() {
+        return((this.yCenter - PLAYER_RADIUS) < 0)
+    }
+
+    collideDown() {
+        return((this.yCenter + PLAYER_RADIUS) > GAME_WORLD_HEIGHT)
+    }
 }

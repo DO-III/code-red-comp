@@ -10,9 +10,11 @@ ASSET_MANAGER.queueDownload("./Ships/gfx/Bullet.svg");
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
+	const util = new GameConstants();
 
 	gameEngine.init(ctx);
 
+    
 	gameEngine.addEntity(new PlayerShip(gameEngine));
 	//Messy hardcode. Should later have an entity that manages spawning.
 	gameEngine.addEntity(new Chaser(gameEngine));

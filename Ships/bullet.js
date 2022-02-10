@@ -1,6 +1,7 @@
 //Concept of a bullet.
 //Could be subclassed as "PlayerBullet" and "DodgerBullet"...
 
+
 const BG_WIDTH = 20;
 const BG_HEIGHT = 20;
 
@@ -11,6 +12,8 @@ const BULLET_ASSET = ASSET_MANAGER.getAsset("./Ships/gfx/Bullet.svg");
 const BULLET_SPEED = 7.5;
 
 const BULLET_RADIUS = 3;
+
+//const BulletUtils = new GameConstants();
 
 
 class Bullet {
@@ -86,7 +89,8 @@ class Bullet {
         this.updateCenter();
 
         //Ugly canvas size hardcode to remove.
-        if(this.x < 0 || this.x > 600 || this.y < 0 || this.y > 600) {
+        if(this.xCenter < 0 || this.xCenter > GAME_WORLD_WIDTH || 
+            this.yCenter < 0 || this.yCenter > GAME_WORLD_HEIGHT) {
             this.removeFromWorld = true;
         }
     }

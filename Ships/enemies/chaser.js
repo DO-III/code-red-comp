@@ -39,7 +39,7 @@ class Chaser {
         
 
     }
-    
+
     draw(ctx) {
         var myCanvas = document.createElement('canvas');
         myCanvas.width = CHASER_WIDTH;
@@ -75,6 +75,7 @@ class Chaser {
         this.y += this.dY;
         this.dX *= CHASER_FRICTION;
         this.dY *= CHASER_FRICTION;
+        this.edgeDetect();
         this.updateCenter();
         
         
@@ -109,7 +110,6 @@ class Chaser {
     */
     calcMovement(p1X, p2X, p1Y, p2Y) {
         let effectiveMoveRate = CHASER_MOVE_RATE * this.game.clockTick;
-        console.log(this.game.clockTick);
 
         this.angle = Math.atan2(p2Y - p1Y, p2X - p1X);
         this.dX += Math.cos(this.angle) * effectiveMoveRate;
@@ -128,25 +128,52 @@ class Chaser {
     }
 
     /*
-    Has this enemy been shot? If
-    
+    Has this enemy been shot?
+
     If so, this enemy is removed from the game world.
     */
     checkIfShot() {
-    var that = this;
+        var that = this;
 
-    this.game.entities.forEach(function (entity) {
-        /*
-        Check if thing has bounding circle.
-        If so, make sure it's not the player.
-        If that's true, actually detect collision.
-        */
-        if(!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet)
-          && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
-            entity.removeFromWorld = true;  
-            that.removeFromWorld = true;
+        this.game.entities.forEach(function (entity) {
+            /*
+            Check if thing has bounding circle.
+            If so, make sure it's not the player.
+            If that's true, actually detect collision.
+            */
+            if(!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet)
+                && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
+                entity.removeFromWorld = true;  
+                that.removeFromWorld = true;
+            }
+        })
+    }
+
+    collideLeft() {  
+        return((this.xCenter - CHASER_RADIUS) < 0)
+    }
+
+    collideRight() {
+        return((this.xCenter + CHASER_RADIUS) > GAME_WORLD_WIDTH)
+    }
+
+    collideUp() {
+        return((this.yCenter - CHASER_RADIUS) < 0)
+    }
+
+    collideDown() {
+        return((this.yCenter + CHASER_RADIUS) > GAME_WORLD_HEIGHT)
+    }
+
+    edgeDetect() {
+        if(this.collideLeft() || this.collideRight()) {
+            this.x += (this.collideLeft() ? 1 : -1);
+            this.dX *= -0.1;
         }
-    })
- }
+
+        if(this.collideUp() || this.collideDown()) {
+            this.dY *= -0.1;
+        }
+    }
 
 }
