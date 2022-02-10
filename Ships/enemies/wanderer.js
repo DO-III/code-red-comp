@@ -14,10 +14,10 @@ const WANDERER_FRICTION = 1; //Rate at which Chaser loses speed. Lower = slower.
 const TIME_TO_SHOOT = .5;
 
 class Wanderer {
-    constructor(game,player) {
+    constructor(game) {
         //Initialize element.
         this.game = game;
-        this.player = player;
+        this.player = this.fetchPlayer(game);
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/wanderer.png"); //Messy hardcode, fix later.
 
         this.x = 200;
@@ -72,6 +72,7 @@ class Wanderer {
         this.x += this.dX;
         this.y += this.dY;
     }
+    
 
     /*
     Update the Wanderer's center.
@@ -87,7 +88,7 @@ class Wanderer {
     shoot() {
         this.game.addEntity(new Bullet(this.game,
             (this.x + WGW_CENTER),
-            (this.y + WGH_CENTER), player.x,player.y));
+            (this.y + WGH_CENTER), this.player.x, this.player.y));
     }
 
     collideLeft() {
@@ -147,6 +148,17 @@ class Wanderer {
         var dy = (this.player.y) - (this.y + WGH_CENTER);
 
         return (Math.atan2(dy, dx) + (Math.PI / 2));
+    }
+
+    /*
+    Fetch the player reference from the game manager.
+    */
+    fetchPlayer(game) {
+        var foundPlayer;
+        while(typeof foundPlayer === 'undefined') {
+            foundPlayer = game.entities.find(entity => entity instanceof PlayerShip);
+        }
+        return(foundPlayer);
     }
 
 }
