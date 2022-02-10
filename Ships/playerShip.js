@@ -17,8 +17,12 @@ class PlayerShip {
     */
     constructor(game) {
         
+        this.playerCanDie = true;
+        this.dead = false;
+
         this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Player.png"); //Messy hardcode, fix later.
+        this.explodeAsset = ASSET_MANAGER.getAsset("./Ships/gfx/explosion.svg"); //Messy hardcode, fix later.
 
         this.x = 300;
         this.y = 300;
