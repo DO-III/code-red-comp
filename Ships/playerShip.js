@@ -23,6 +23,7 @@ class PlayerShip {
         this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Player.png"); //Messy hardcode, fix later.
         this.explodeAsset = ASSET_MANAGER.getAsset("./Ships/gfx/explosion.svg"); //Messy hardcode, fix later.
+        this.deathAnimation = new Animator(this.explodeAsset, 0, 0, 50, 50, 3, 0.1, true);
 
         this.x = 300;
         this.y = 300;
@@ -31,8 +32,6 @@ class PlayerShip {
         this.updateCenter();
         this.BoundingCircle = new BoundingCircle(PLAYER_RADIUS, this.xCenter, this.yCenter);
         this.lastShot = 0;
-
-        this.dead = false;
 
 
         this.xVelocity = 0; //Change in X between ticks.
@@ -49,9 +48,8 @@ class PlayerShip {
     draw(ctx) {
 
         if(this.dead) {
-            console.log("Player has died.");
-            this.dead = false;
-        }
+            this.deathAnimation.drawFrame(this.game.clockTick, ctx, this.x + 10, this.y + 10);
+        } else {
 
 
         var myCanvas = document.createElement('canvas');
@@ -72,6 +70,7 @@ class PlayerShip {
         ctx.beginPath();
         ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, PLAYER_RADIUS, 0, 2 * Math.PI);
         ctx.stroke();
+        }
 
     }
 
@@ -79,6 +78,10 @@ class PlayerShip {
     Update player's state.
     */
     update() {
+        if (this.deathAnimation.loops() > 30) {
+            this.removeFromWorld = true;
+        }
+
         this.moveHandle();
         this.rotateHandle();
         this.checkForCollisions();
@@ -86,7 +89,7 @@ class PlayerShip {
         this.lastShot += this.game.clockTick;
 
         //If mouse exists, is down, and shot not on cooldown, fire.
-        if (this.game.mousedown && this.game.mouse && this.lastShot > PLAYER_FIRING_COOLDOWN) {
+        if (!this.dead && this.game.mousedown && this.game.mouse && this.lastShot > PLAYER_FIRING_COOLDOWN) {
             this.shoot(this.game.mouse);
             this.lastShot = 0;
             this.game.click = false;
@@ -121,6 +124,7 @@ class PlayerShip {
 
         //Calculate the x velocity.
         //This is found by adding "left" to "right"; if both are pressed, no movement.
+        if (!this.dead) {
         this.xVelocity += (
             //Get player's movement in the first place.
             ((this.game.left && !this.collideLeft()) ? (-1 * effectiveMoveRate) : 0 ) 
@@ -131,6 +135,7 @@ class PlayerShip {
             ((this.game.up && !this.collideUp()) ? (-1 * effectiveMoveRate) : 0 ) 
             + ((this.game.down && !this.collideDown()) ? effectiveMoveRate : 0 )
         );
+        }
 
         //Calculate differences and change position according to clock tick.
         //this.x += this.xVelocity * this.game.clockTick;
