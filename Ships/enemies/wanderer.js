@@ -87,7 +87,7 @@ class Wanderer {
     }
 
     collideRight() {
-        return((this.xCenter + WANDERER_RADIUS) > 600)
+        return((this.xCenter + WANDERER_RADIUS) > GAME_WORLD_WIDTH)
     }
 
     collideUp() {
@@ -95,7 +95,7 @@ class Wanderer {
     }
 
     collideDown() {
-        return((this.yCenter + WANDERER_RADIUS) > 600)
+        return((this.yCenter + WANDERER_RADIUS) > GAME_WORLD_HEIGHT)
     }
 
     updateDirection() {
