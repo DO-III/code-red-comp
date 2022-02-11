@@ -65,6 +65,11 @@ class Chaser {
 
         //First - have we been shot?
         this.checkIfShot();
+
+        //Is the player dead?
+        if(this.player.dead) {
+            this.removeFromWorld = true;
+        }
         
         //Get player's location.
         this.playerX = this.player.xCenter;

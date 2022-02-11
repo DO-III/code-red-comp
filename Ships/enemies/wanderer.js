@@ -18,6 +18,7 @@ class Wanderer {
         //Initialize element.
         this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Wanderer.svg"); //Messy hardcode, fix later.
+        this.player = this.fetchPlayer(game);
 
         this.x = 200;
         this.y = 200;
@@ -58,6 +59,10 @@ class Wanderer {
     update() {
         //First off, have we been shot?
         this.checkIfShot();
+        //Is the player dead?
+        if(this.player.dead) {
+            this.removeFromWorld = true;
+        }
 
         //Get current location.
         this.updateCenter();
@@ -144,5 +149,16 @@ class Wanderer {
                 that.removeFromWorld = true;
             }
         })
+    }
+
+        /*
+    Fetch the player reference from the game manager.
+    */
+    fetchPlayer(game) {
+        var foundPlayer;
+        while(typeof foundPlayer === 'undefined') {
+            foundPlayer = game.entities.find(entity => entity instanceof PlayerShip);
+        }
+        return(foundPlayer);
     }
 }
