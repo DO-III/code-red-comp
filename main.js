@@ -6,6 +6,7 @@ ASSET_MANAGER.queueDownload("./Ships/gfx/Chaser.svg");
 ASSET_MANAGER.queueDownload("./Ships/gfx/Wanderer.svg");
 ASSET_MANAGER.queueDownload("./Ships/gfx/Bullet.svg");
 ASSET_MANAGER.queueDownload("./Ships/gfx/explosion.svg");
+ASSET_MANAGER.queueDownload("./backdrop.svg");
 //Add all images here.
 
 ASSET_MANAGER.downloadAll(() => {
