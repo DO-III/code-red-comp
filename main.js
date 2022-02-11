@@ -14,14 +14,15 @@ ASSET_MANAGER.downloadAll(() => {
 	const ctx = canvas.getContext("2d");
 	const util = new GameConstants();
 
+	const waves = new WaveManager(gameEngine);
+	
+
 	gameEngine.init(ctx);
 
     
-	gameEngine.addEntity(new PlayerShip(gameEngine));
-	//Messy hardcode. Should later have an entity that manages spawning.
-	gameEngine.addEntity(new Chaser(gameEngine));
-	gameEngine.addEntity(new Wanderer(gameEngine));
+	
 	
 
 	gameEngine.start();
+	waves.devTestSpawn();
 });

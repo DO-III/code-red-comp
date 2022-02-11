@@ -14,14 +14,14 @@ const WANDERER_FRICTION = 1; //Rate at which Chaser loses speed. Lower = slower.
 
 
 class Wanderer {
-    constructor(game) {
+    constructor(game, point) {
         //Initialize element.
         this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Wanderer.svg"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
 
-        this.x = 200;
-        this.y = 200;
+        this.x = point.x;
+        this.y = point.y;
         this.dX = 0;
         this.dY = 0;
         this.xCenter = 0;
