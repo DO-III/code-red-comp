@@ -18,11 +18,11 @@ ASSET_MANAGER.downloadAll(() => {
 	
 
 	gameEngine.init(ctx);
-
+	gameEngine.addEntity(new PlayerShip(gameEngine));
     
 	
 	
 
 	gameEngine.start();
-	waves.devTestSpawn();
+	waves.devTestWave();
 });

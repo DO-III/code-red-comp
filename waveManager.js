@@ -7,9 +7,16 @@ or edit any waves that appear.
 
 const WAVE_TIME_COEFFICIENT = 350;
 
+
 class WaveManager {
+
+    static activeEnemies = [];
+
     constructor(game) {
         this.game = game;
+        //this.player = this.fetchPlayer(game);
+        this.enemiesInWave = []; //Holds enemies spawned.
+        this.totalEnemies = 0;
 
         //Set up basic spawn locations.
         //These are used to handle enemy spawning in the future.
@@ -26,32 +33,63 @@ class WaveManager {
             new Point(374, 460),
         ];
 
+        this.devTestWave();
+
+        this.spawnWave();
+
 
     }
 
+    /*
+    Spawn all enemies in the wave.
 
-    devTestSpawn() {
-        this.game.addEntity(new PlayerShip(this.game));
-        this.game.addEntity(new Spawn(this.game, this.locations[4], 'w', 0));
-        this.game.addEntity(new Spawn(this.game, this.locations[5], 'w', 0));
-        this.game.addEntity(new Spawn(this.game, this.locations[6], 'w', 0));
-        this.game.addEntity(new Spawn(this.game, this.locations[7], 'w', 0));
-	    //this.game.addEntity(new Chaser(this.game));
+    If the player is killed during a wave, the wave should restart from the top.
+    */
+    spawnWave() {
+        var that = this;
+
+        this.enemiesInWave.forEach(function(spawn) {
+            that.game.addEntity(spawn);
+            spawn.isActive = true;
+            that.totalEnemies++;
+        })
+
         
-	    this.game.addEntity(new Spawn(this.game, this.locations[0], 'c', 1000));
-        this.game.addEntity(new Spawn(this.game, this.locations[1], 'c', 1000));
-        this.game.addEntity(new Spawn(this.game, this.locations[2], 'c', 1000));
-        this.game.addEntity(new Spawn(this.game, this.locations[3], 'c', 1000));
+    }
 
-        this.game.addEntity(new Spawn(this.game, this.locations[4], 'w', 1100));
-        this.game.addEntity(new Spawn(this.game, this.locations[5], 'w', 1300));
-        this.game.addEntity(new Spawn(this.game, this.locations[6], 'w', 1500));
-        this.game.addEntity(new Spawn(this.game, this.locations[7], 'w', 1700));
-        this.game.addEntity(new Spawn(this.game, this.locations[4], 'w', 1700));
-        this.game.addEntity(new Spawn(this.game, this.locations[5], 'w', 1500));
-        this.game.addEntity(new Spawn(this.game, this.locations[6], 'w', 1300));
-        this.game.addEntity(new Spawn(this.game, this.locations[7], 'w', 1100));
+
+    devTestWave() {
+        this.enemiesInWave = [
+        new Spawn(this.game, this.locations[4], 'w', 0),
+        new Spawn(this.game, this.locations[5], 'w', 0),
+        new Spawn(this.game, this.locations[6], 'w', 0),
+        new Spawn(this.game, this.locations[7], 'w', 0)
+	    //this.game.addEntity(new Chaser(this.game));
+        /*
+	    this.game.addEntity(new Spawn(this.game, this.locations[0], 'c', 1000)),
+        this.game.addEntity(new Spawn(this.game, this.locations[1], 'c', 1000)),
+        this.game.addEntity(new Spawn(this.game, this.locations[2], 'c', 1000)),
+        this.game.addEntity(new Spawn(this.game, this.locations[3], 'c', 1000)),
+
+        this.game.addEntity(new Spawn(this.game, this.locations[4], 'w', 1100)),
+        this.game.addEntity(new Spawn(this.game, this.locations[5], 'w', 1300)),
+        this.game.addEntity(new Spawn(this.game, this.locations[6], 'w', 1500)),
+        this.game.addEntity(new Spawn(this.game, this.locations[7], 'w', 1700)),
+        this.game.addEntity(new Spawn(this.game, this.locations[4], 'w', 1700)),
+        this.game.addEntity(new Spawn(this.game, this.locations[5], 'w', 1500)),
+        this.game.addEntity(new Spawn(this.game, this.locations[6], 'w', 1300)),
+        this.game.addEntity(new Spawn(this.game, this.locations[7], 'w', 1100))
+        */
+        ];
         //this.game.addEntity(new Wanderer(this.game, this.locations[7]));
+    }
+
+    fetchPlayer(game) {
+        var foundPlayer;
+        while(typeof foundPlayer === 'undefined') {
+            foundPlayer = game.entities.find(entity => entity instanceof PlayerShip);
+        }
+        return(foundPlayer);
     }
 
 }
@@ -92,13 +130,14 @@ class Spawn {
         this.enemy = enemy;
         this.radius = 800;
         this.waitTime = waitTime;
+        this.isActive = false;
     }
 
     /*
     Circle drawing animation to depict enemy "spawning" in.
     */
     draw(ctx) {
-        if(this.waitTime <= 0) {
+        if(this.waitTime <= 0 && this.isActive) {
             ctx.strokeStyle = 'green';
             ctx.beginPath();
             ctx.arc(this.point.x + 25, this.point.y + 25, this.radius, 0, 2 * Math.PI);
@@ -110,11 +149,13 @@ class Spawn {
     Update circle size.
     */
     update() {
-        if((typeof this.waitTime !== 'undefined') && this.waitTime > 0) {
-            this.waitTime -= (this.game.clockTick * WAVE_TIME_COEFFICIENT);
-        } else {
-            this.radius -= (this.game.clockTick * WAVE_TIME_COEFFICIENT);
-            this.checkIsDone();
+        if (this.isActive) {
+            if((typeof this.waitTime !== 'undefined') && this.waitTime > 0) {
+                this.waitTime -= (this.game.clockTick * WAVE_TIME_COEFFICIENT);
+            } else {
+                this.radius -= (this.game.clockTick * WAVE_TIME_COEFFICIENT);
+                this.checkIsDone();
+            }
         }
     }
 
@@ -132,20 +173,21 @@ class Spawn {
     Spawn an enemy at the given point. Case insensitive.
     */
     spawnEnemyAtPoint() {
+        let enemyRef = null;
         switch(this.enemy) {
             case 'w' :
             case 'W' :
-                this.game.addEntity(new Wanderer(this.game, this.point));
+                enemyRef = new Wanderer(this.game, this.point);
                 break;
             case 'c' :
             case 'C' :
-                this.game.addEntity(new Chaser(this.game, this.point));
+                enemyRef = new Chaser(this.game, this.point);
                 break;
             default:
-                throw "Spawn was given improper char representing enemy! (see documentation)"
-
+                throw "Spawn was given improper char representing enemy! (see documentation)";
         }
+        gameEngine.addEntity(enemyRef);
+        WaveManager.activeEnemies.push(enemyRef);
 
     }
-
 }
