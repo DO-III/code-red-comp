@@ -30,10 +30,10 @@ class WaveManager {
     devTestSpawn() {
         this.game.addEntity(new PlayerShip(this.game));
 	    //this.game.addEntity(new Chaser(this.game));
-	    this.game.addEntity(new Wanderer(this.game, this.locations[0]));
-        this.game.addEntity(new Wanderer(this.game, this.locations[1]));
-        this.game.addEntity(new Wanderer(this.game, this.locations[2]));
-        this.game.addEntity(new Wanderer(this.game, this.locations[3]));
+	    this.game.addEntity(new Chaser(this.game, this.locations[0]));
+        this.game.addEntity(new Chaser(this.game, this.locations[1]));
+        this.game.addEntity(new Chaser(this.game, this.locations[2]));
+        this.game.addEntity(new Chaser(this.game, this.locations[3]));
         this.game.addEntity(new Wanderer(this.game, this.locations[4]));
         this.game.addEntity(new Wanderer(this.game, this.locations[5]));
         this.game.addEntity(new Wanderer(this.game, this.locations[6]));
