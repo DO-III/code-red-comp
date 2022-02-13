@@ -25,7 +25,7 @@ class PlayerShip {
         this.explodeAsset = ASSET_MANAGER.getAsset("./Ships/gfx/explosion.svg"); //Messy hardcode, fix later.
         this.deathAnimation = new Animator(this.explodeAsset, 0, 0, 50, 50, 3, 0.1, true);
 
-        this.x = 300;
+        this.x = 400;
         this.y = 300;
         this.xCenter = 0;
         this.yCenter = 0;
@@ -80,6 +80,7 @@ class PlayerShip {
     update() {
         if (this.deathAnimation.loops() > 30) {
             this.removeFromWorld = true;
+            WaveManager.activeEnemies = -1;
         }
 
         this.moveHandle();

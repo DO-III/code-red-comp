@@ -16,15 +16,15 @@ const CHASER_FRICTION = 0.97; //Rate at which Chaser loses speed. Lower = slower
 
 
 class Chaser {
-    constructor(game) {
+    constructor(game, point) {
         //Initialize element.
         this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Chaser.svg"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
         console.log(this.player);
 
-        this.x = 100;
-        this.y = 100;
+        this.x = point.x;
+        this.y = point.y;
         this.dX = 0;
         this.dY = 0;
         this.xCenter = 0;
