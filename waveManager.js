@@ -9,12 +9,10 @@ const WAVE_TIME_COEFFICIENT = 350;
 
 
 class WaveManager {
-
     constructor(game) {
         this.game = game;
-        //this.player = this.fetchPlayer(game);
-        this.enemiesInWave = []; //Holds enemies spawned.
-        this.totalEnemies = 0;
+        this.player = this.fetchPlayer(this.game);
+        this.enemiesInWave = []; //Holds enemies spawned;
 
         //Set up basic spawn locations.
         //These are used to handle enemy spawning in the future.
@@ -49,30 +47,44 @@ class WaveManager {
         this.enemiesInWave.forEach(function(spawn) {
             that.game.addEntity(spawn);
             spawn.isActive = true;
-            console.log(that.totalEnemies);
         })
     }
 
     devTestWave() {
         this.enemiesInWave = [
-        new Spawn(this.game, this.locations[4], 'w', 0),
-        new Spawn(this.game, this.locations[5], 'w', 0),
-        new Spawn(this.game, this.locations[6], 'w', 0),
-        new Spawn(this.game, this.locations[7], 'w', 0),
+        new Spawn(this, this.game, this.locations[4], 'w', 0),
+        new Spawn(this, this.game, this.locations[5], 'w', 0),
+        new Spawn(this, this.game, this.locations[6], 'w', 0),
+        new Spawn(this, this.game, this.locations[7], 'w', 0),
 	    //this.game.addEntity(new Chaser(this.game));
         
-	    new Spawn(this.game, this.locations[0], 'c', 1000),
-        new Spawn(this.game, this.locations[1], 'c', 1000),
-        new Spawn(this.game, this.locations[2], 'c', 1000),
-        new Spawn(this.game, this.locations[3], 'c', 1000),
+	    new Spawn(this, this.game, this.locations[0], 'c', 1000),
+        new Spawn(this, this.game, this.locations[1], 'c', 1000),
+        new Spawn(this, this.game, this.locations[2], 'c', 1000),
+        new Spawn(this, this.game, this.locations[3], 'c', 1000),
 
-        new Spawn(this.game, this.locations[4], 'w', 1100),
-        new Spawn(this.game, this.locations[5], 'w', 1300),
-        new Spawn(this.game, this.locations[6], 'w', 1500),
-        new Spawn(this.game, this.locations[7], 'w', 1700)
+        new Spawn(this, this.game, this.locations[4], 'w', 1100),
+        new Spawn(this, this.game, this.locations[5], 'w', 1300),
+        new Spawn(this, this.game, this.locations[6], 'w', 1500),
+        new Spawn(this, this.game, this.locations[7], 'w', 1700)
         ];
     }
 
+    fetchPlayer(game) {
+        var foundPlayer;
+        while(typeof foundPlayer === 'undefined') {
+            foundPlayer = game.entities.find(entity => entity instanceof PlayerShip);
+        }
+        return(foundPlayer);
+    }
+
+    getPlayerReference() {
+        return(this.player);
+    }
+
+    /*
+    Fetch the player reference from the game manager.
+    */
     fetchPlayer(game) {
         var foundPlayer;
         while(typeof foundPlayer === 'undefined') {
@@ -110,7 +122,7 @@ class Spawn {
      * @param {*} enemy Character representing enemy; W for Wanderer, C for Chaser.
      * @param {*} waitTime Determines when Spawn should activate. Longer means longer wait.
      */
-    constructor(game, point, enemy, waitTime) {
+    constructor(wave, game, point, enemy, waitTime) {
         this.game = game;
         this.point = point;
         //Enemy is a char literal corresponding to a certain enemy type.
@@ -120,6 +132,7 @@ class Spawn {
         this.radius = 800;
         this.waitTime = waitTime;
         this.isActive = false;
+        this.player = wave.player;
     }
 
     /*
@@ -155,6 +168,9 @@ class Spawn {
         if(this.radius <= 1) {
             this.spawnEnemyAtPoint();
             this.removeFromWorld = true;
+        } else if (this.player.dead) {
+            console.log(this.player);
+            this.removeFromWorld = true;
         }
     }
 
@@ -178,4 +194,6 @@ class Spawn {
         gameEngine.addEntity(enemyRef);
 
     }
+
+    
 }
