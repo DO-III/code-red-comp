@@ -80,6 +80,7 @@ class PlayerShip {
     update() {
         if (this.deathAnimation.loops() > 30) {
             this.removeFromWorld = true;
+            WaveManager.activeEnemies = -1;
         }
 
         this.moveHandle();

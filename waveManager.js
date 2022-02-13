@@ -10,8 +10,6 @@ const WAVE_TIME_COEFFICIENT = 350;
 
 class WaveManager {
 
-    static activeEnemies = [];
-
     constructor(game) {
         this.game = game;
         //this.player = this.fetchPlayer(game);
@@ -51,37 +49,28 @@ class WaveManager {
         this.enemiesInWave.forEach(function(spawn) {
             that.game.addEntity(spawn);
             spawn.isActive = true;
-            that.totalEnemies++;
+            console.log(that.totalEnemies);
         })
-
-        
     }
-
 
     devTestWave() {
         this.enemiesInWave = [
         new Spawn(this.game, this.locations[4], 'w', 0),
         new Spawn(this.game, this.locations[5], 'w', 0),
         new Spawn(this.game, this.locations[6], 'w', 0),
-        new Spawn(this.game, this.locations[7], 'w', 0)
+        new Spawn(this.game, this.locations[7], 'w', 0),
 	    //this.game.addEntity(new Chaser(this.game));
-        /*
-	    this.game.addEntity(new Spawn(this.game, this.locations[0], 'c', 1000)),
-        this.game.addEntity(new Spawn(this.game, this.locations[1], 'c', 1000)),
-        this.game.addEntity(new Spawn(this.game, this.locations[2], 'c', 1000)),
-        this.game.addEntity(new Spawn(this.game, this.locations[3], 'c', 1000)),
+        
+	    new Spawn(this.game, this.locations[0], 'c', 1000),
+        new Spawn(this.game, this.locations[1], 'c', 1000),
+        new Spawn(this.game, this.locations[2], 'c', 1000),
+        new Spawn(this.game, this.locations[3], 'c', 1000),
 
-        this.game.addEntity(new Spawn(this.game, this.locations[4], 'w', 1100)),
-        this.game.addEntity(new Spawn(this.game, this.locations[5], 'w', 1300)),
-        this.game.addEntity(new Spawn(this.game, this.locations[6], 'w', 1500)),
-        this.game.addEntity(new Spawn(this.game, this.locations[7], 'w', 1700)),
-        this.game.addEntity(new Spawn(this.game, this.locations[4], 'w', 1700)),
-        this.game.addEntity(new Spawn(this.game, this.locations[5], 'w', 1500)),
-        this.game.addEntity(new Spawn(this.game, this.locations[6], 'w', 1300)),
-        this.game.addEntity(new Spawn(this.game, this.locations[7], 'w', 1100))
-        */
+        new Spawn(this.game, this.locations[4], 'w', 1100),
+        new Spawn(this.game, this.locations[5], 'w', 1300),
+        new Spawn(this.game, this.locations[6], 'w', 1500),
+        new Spawn(this.game, this.locations[7], 'w', 1700)
         ];
-        //this.game.addEntity(new Wanderer(this.game, this.locations[7]));
     }
 
     fetchPlayer(game) {
@@ -150,7 +139,7 @@ class Spawn {
     */
     update() {
         if (this.isActive) {
-            if((typeof this.waitTime !== 'undefined') && this.waitTime > 0) {
+            if(this.waitTime > 0) {
                 this.waitTime -= (this.game.clockTick * WAVE_TIME_COEFFICIENT);
             } else {
                 this.radius -= (this.game.clockTick * WAVE_TIME_COEFFICIENT);
@@ -187,7 +176,6 @@ class Spawn {
                 throw "Spawn was given improper char representing enemy! (see documentation)";
         }
         gameEngine.addEntity(enemyRef);
-        WaveManager.activeEnemies.push(enemyRef);
 
     }
 }
