@@ -1,7 +1,7 @@
 /*
 Wanderers... wander.
 */
-
+//TODO: Move all this to new class; rename and refactor all constants appropriately.
 const WANDERER_WIDTH = 50; //Should match graphic in final.
 const WANDERER_HEIGHT = 50; //Should match graphic in final.
 
@@ -9,11 +9,12 @@ const WGW_CENTER = WANDERER_WIDTH / 2; //Measures center of graphic, x-value.
 const WGH_CENTER = WANDERER_HEIGHT / 2; //Center of graphic, y-value.
 
 const WANDERER_RADIUS = 20; //Size of Wanderer bounding circle.
-const WANDERER_MOVE_RATE = 1.5; //Speed at which Wanderer moves.
-const WANDERER_FRICTION = 0.97; //Rate at which Chaser loses speed. Lower = slower.
-const DISTANCE_FROM_PLAYER = 150; // Min distance Away from PLayer
+const DODGER_DETECT_RADIUS = WANDERER_RADIUS * 3; //Size of detection range.
+const WANDERER_MOVE_RATE = 20; //Speed at which Wanderer moves.
+const WANDERER_FRICTION = 0.9; //Rate at which Chaser loses speed. Lower = slower.
+const DISTANCE_FROM_PLAYER = 200; // Min distance Away from PLayer
 
-const SHOOT_RATE = 1 // Shoot Rate 
+const SHOOT_RATE = 1; // Shoot Rate 
 
 class Wanderer {
     constructor(game) {
@@ -32,7 +33,8 @@ class Wanderer {
         this.yCenter = 0;
         this.updateCenter();
         this.BoundingCircle = new BoundingCircle(WANDERER_RADIUS, this.xCenter, this.yCenter);
-        this.BulletBoundingCircle = new BoundingCircle(2 * WANDERER_RADIUS, this.xCenter, this.yCenter);
+        this.BulletBoundingCircle = new BoundingCircle(DODGER_DETECT_RADIUS, this.xCenter, this.yCenter);
+        console.log(this.BulletBoundingCircle);
 
         this.playerX = 0;
         this.playerY = 0;
@@ -59,7 +61,7 @@ class Wanderer {
         ctx.beginPath();
         ctx.strokeStyle = "white";
         ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, WANDERER_RADIUS, 0, 2 * Math.PI, false);
-        ctx.arc(this.BulletBoundingCircle.xCenter, this.BulletBoundingCircle.yCenter, 2 * WANDERER_RADIUS, 0, 2 * Math.PI, false);
+        ctx.arc(this.BulletBoundingCircle.xCenter, this.BulletBoundingCircle.yCenter, DODGER_DETECT_RADIUS, 0, 2 * Math.PI, false);
         ctx.stroke();
     }
 
@@ -104,7 +106,7 @@ class Wanderer {
         this.xCenter = this.x + WGW_CENTER;
         this.yCenter = this.y + WGH_CENTER;
         this.BoundingCircle = new BoundingCircle(WANDERER_RADIUS, this.xCenter, this.yCenter);
-        this.BulletBoundingCircle = new BoundingCircle(2 * WANDERER_RADIUS, this.xCenter, this.yCenter);
+        this.BulletBoundingCircle = new BoundingCircle(DODGER_DETECT_RADIUS, this.xCenter, this.yCenter);
     }
 
     rotateHandle() {
@@ -143,12 +145,13 @@ class Wanderer {
     edgeDetection() {
         // collision with left or right walls
         if (this.collideLeft() || this.collideRight()) {
-            this.x += (this.collideLeft() ? 1 : -1);
-            this.dX *= -0.1;
+            this.x = (this.collideLeft() ? 1 : GAME_WORLD_WIDTH - 50);
+            this.dX *= -1;
         }
 
         if (this.collideUp() || this.collideDown()) {
-            this.dY *= -0.1;
+            this.y = (this.collideUp() ? 1 : GAME_WORLD_HEIGHT - 50);
+            this.dY *= -1;
         }
     }
 
@@ -157,8 +160,21 @@ class Wanderer {
         /* Checing If Bullet Collide with bullet bounding circle*/
         this.game.entities.forEach(function (entity) {
             if (!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet)
-                && (entity.parent == "Player") && entity.BoundingCircle && that.BulletBoundingCircle.collide(entity.BoundingCircle)) {
-                console.log("Bullet Toward Wanderer");
+                && (entity.parent == "Player") 
+                && that.BulletBoundingCircle.collide(entity.BoundingCircle)) {
+
+                //If we're here, we're threatened by a bullet and must react.
+                //First, get the x and y location of the bullet.
+                var bullX = entity.xCenter;
+                var bullY = entity.yCenter;
+                //Now we want to push ourselves *away*.
+                //We take a function of the inverse of the distance, and move away.
+                let effectiveMoveRate = WANDERER_MOVE_RATE * that.game.clockTick;
+                //Note that the angle is used to move away from the shot, with some variance.
+                //Dodgers are menacing.
+                let angle = (-1 + Math.random(1) * -1) / Math.atan2(that.yCenter - bullY, that.xCenter - bullX);
+                that.dX += (Math.cos(angle) * effectiveMoveRate) * -9;
+                that.dY += (Math.sin(angle) * effectiveMoveRate) * -9;
             }
         })
     }
@@ -174,9 +190,13 @@ class Wanderer {
         var distance = Math.sqrt(Math.pow((p2Y - p1Y), 2) + Math.pow((p2X - p1X), 2));
         if (distance > DISTANCE_FROM_PLAYER) {
             this.angle = Math.atan2(p2Y - p1Y, p2X - p1X);
-            this.dX += Math.cos(this.angle) * effectiveMoveRate;
-            this.dY += Math.sin(this.angle) * effectiveMoveRate;
+            this.dX += (Math.cos(this.angle) * effectiveMoveRate);
+            this.dY += (Math.sin(this.angle) * effectiveMoveRate);
         }
+    }
+
+    calcDistance(p1X, p2X, p1Y, p2Y) {
+        return Math.sqrt(Math.pow((p2Y - p1Y), 2) + Math.pow((p2X - p1X), 2));
     }
 
     /*
