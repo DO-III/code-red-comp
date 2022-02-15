@@ -54,7 +54,6 @@ class Score {
         this.myTextColor = color;
 
         this.timePresent = 0;
-        //this.fillColor = 'white';
         this.scoreKeeper = this.getScoreKeeper(this.game);
         this.scoreKeeper.score += this.value;
     }
@@ -77,14 +76,9 @@ class Score {
 
     update() {
        this.timePresent += this.game.clockTick;
-        if (this.timePresent > 2) {
+        if (this.timePresent > 1.5) {
             this.removeFromWorld = true;
         }
-        //TODO: flashing action
-        /* else {
-            if (Math.floor(this.timePresent) % 2 )
-        }*/
-
     }
 
     /*
