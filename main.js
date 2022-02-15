@@ -13,13 +13,17 @@ ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	const ctx = canvas.getContext("2d");
 	const util = new GameConstants();
+	
+	
 
 	
 	
 
 	gameEngine.init(ctx);
 	gameEngine.addEntity(new PlayerShip(gameEngine));
+	gameEngine.addEntity(new ScoreKeeper(gameEngine));
 	const waves = new WaveManager(gameEngine);
+	
     
 	
 	
