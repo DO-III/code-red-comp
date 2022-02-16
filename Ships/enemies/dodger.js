@@ -1,7 +1,13 @@
 /*
-Dodgers... Dodger.
+Dodgers are aggressive pink ships that run from the player's shots,
+firing back as they go.
+
+They also stop within range of the player, providing an interesting challenge.
+
+Use them sparingly as they are exceptionally dangerous.
+
+Credit to Sidise Tasisa for the "detecting player and bullet" logic.
 */
-//TODO: Move all this to new class; rename and refactor all constants appropriately.
 const DODGER_WIDTH = 50; //Should match graphic in final.
 const DODGER_HEIGHT = 50; //Should match graphic in final.
 
@@ -11,22 +17,20 @@ const DGH_CENTER = DODGER_HEIGHT / 2; //Center of graphic, y-value.
 const DODGER_RADIUS = 20; //Size of Dodger bounding circle.
 const DODGER_DETECT_RADIUS = DODGER_RADIUS * 3; //Size of detection range.
 const DODGER_MOVE_RATE = 20; //Speed at which Dodger moves.
-const DODGER_FRICTION = 0.9; //Rate at which Chaser loses speed. Lower = slower.
+const DODGER_FRICTION = 0.9; //Rate at which Dodger loses speed. Lower = slower.
 const DODGER_DISTANCE_FROM_PLAYER = 200; // Min distance Away from PLayer
 
-const DODGER_SHOOT_RATE = 1; // Shoot Rate 
+const DODGER_SHOOT_RATE = 1; // Controls the time between the Dodger's shots.
 
 class Dodger {
-    constructor(game) {
+    constructor(game, point) {
         //Initialize element.
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Wanderer.svg"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Dodger.svg");
         this.player = this.fetchPlayer(game);
 
-        this.x = 400;
-        this.y = 100;
-        this.dX = 0;
-        this.dY = 0;
+        this.x = point.x;
+        this.y = point.y;
         this.dX = 0;
         this.dY = 0;
         this.xCenter = 0;
@@ -59,7 +63,6 @@ class Dodger {
 
         //Debug to show bounding circle, keep out of final release.
         ctx.beginPath();
-        ctx.strokeStyle = "white";
         ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, DODGER_RADIUS, 0, 2 * Math.PI, false);
         ctx.arc(this.BulletBoundingCircle.xCenter, this.BulletBoundingCircle.yCenter, DODGER_DETECT_RADIUS, 0, 2 * Math.PI, false);
         ctx.stroke();
@@ -160,7 +163,7 @@ class Dodger {
         /* Checing If Bullet Collide with bullet bounding circle*/
         this.game.entities.forEach(function (entity) {
             if (!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet)
-                && (entity.parent == "Player") 
+                && (entity.parent == "PlayerShip") 
                 && that.BulletBoundingCircle.collide(entity.BoundingCircle)) {
 
                 //If we're here, we're threatened by a bullet and must react.
@@ -214,8 +217,10 @@ class Dodger {
             If that's true, actually detect collision.
             */
             if (!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet)
-                && (entity.parent == "Player") && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
+                && (entity.parent == "PlayerShip") && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
                 entity.removeFromWorld = true;
+                that.game.addEntity(new Score(that.game, that.xCenter, that.yCenter, 100, 'fuchsia'));
+                WaveManager.activeEnemies--;
                 that.removeFromWorld = true;
             }
         })

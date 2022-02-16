@@ -84,7 +84,10 @@ class WaveManager {
         new Spawn(this, this.game, this.locations[4], 'w', 1100),
         new Spawn(this, this.game, this.locations[5], 'w', 1300),
         new Spawn(this, this.game, this.locations[6], 'w', 1500),
-        new Spawn(this, this.game, this.locations[7], 'w', 1701)
+        new Spawn(this, this.game, this.locations[7], 'w', 1700),
+
+        new Spawn(this, this.game, this.locations[0], 'd', 2200),
+        new Spawn(this, this.game, this.locations[3], 'd', 2201),
         ];
     }
 
@@ -210,6 +213,10 @@ class Spawn {
             case 'c' :
             case 'C' :
                 enemyRef = new Chaser(this.game, this.point);
+                break;
+            case 'd' :
+            case 'D' :
+                enemyRef = new Dodger(this.game, this.point);
                 break;
             default:
                 throw "Spawn was given improper char representing enemy! (see documentation)";

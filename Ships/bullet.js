@@ -17,9 +17,10 @@ const BULLET_RADIUS = 3;
 
 
 class Bullet {
-    constructor(game, x, y, mouseX, mouseY) {
+    constructor(game, x, y, mouseX, mouseY, parent) {
         //Initialize element.
         this.game = game;
+        this.parent = parent;
         this.x = x; //X location
         this.y = y; //Y location
         this.xCenter = 0;
