@@ -11,7 +11,7 @@ const WAVE_TIME_COEFFICIENT = 350;
 class WaveManager {
 
     static activeEnemies = 0;
-    
+
 
     constructor(game) {
         this.game = game;
@@ -42,9 +42,10 @@ class WaveManager {
     }
 
     draw(ctx) {
+        console.log(WaveManager.activeEnemies);
         if(this.player.dead) {
             ctx.strokeText("GAME OVER", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
-        } else if(this.waveIsDoneSpawning && this.activeEnemies === 0) {
+        } else if((WaveManager.activeEnemies == 0) && (this.waveIsDoneSpawning)) {
             ctx.strokeText("YOU WIN", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
         }
     }
@@ -213,7 +214,7 @@ class Spawn {
             default:
                 throw "Spawn was given improper char representing enemy! (see documentation)";
         }
-        this.activeEnemies++;
+        WaveManager.activeEnemies++;
         gameEngine.addEntity(enemyRef);
         if (this.isLast) {
             this.wave.waveIsDoneSpawning = true;

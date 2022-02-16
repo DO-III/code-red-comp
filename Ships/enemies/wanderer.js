@@ -148,7 +148,7 @@ class Wanderer {
               && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
                 entity.removeFromWorld = true;  
                 that.game.addEntity(new Score(that.game, that.xCenter, that.yCenter, 25, 'cyan'));
-                that.wave.activeEnemies--;
+                WaveManager.activeEnemies--;
                 that.removeFromWorld = true;
             }
         })
