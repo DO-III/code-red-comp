@@ -9,10 +9,15 @@ const WAVE_TIME_COEFFICIENT = 350;
 
 
 class WaveManager {
+
+    static activeEnemies = 0;
+    
+
     constructor(game) {
         this.game = game;
         this.player = this.fetchPlayer(this.game);
         this.enemiesInWave = []; //Holds enemies spawned;
+        this.waveIsDoneSpawning = false;
 
         //Set up basic spawn locations.
         //These are used to handle enemy spawning in the future.
@@ -36,14 +41,26 @@ class WaveManager {
 
     }
 
+    draw(ctx) {
+        if(this.player.dead) {
+            ctx.strokeText("GAME OVER", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
+        } else if(this.waveIsDoneSpawning && this.activeEnemies === 0) {
+            ctx.strokeText("YOU WIN", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
+        }
+    }
+
+    update() {
+
+    }
+
     /*
     Spawn all enemies in the wave.
 
-    If the player is killed during a wave, the wave should restart from the top.
+    If the player is killed during a wave... well, oops.
     */
     spawnWave() {
+        this.waveIsDoneSpawning = false;
         var that = this;
-
         this.enemiesInWave.forEach(function(spawn) {
             that.game.addEntity(spawn);
             spawn.isActive = true;
@@ -66,7 +83,7 @@ class WaveManager {
         new Spawn(this, this.game, this.locations[4], 'w', 1100),
         new Spawn(this, this.game, this.locations[5], 'w', 1300),
         new Spawn(this, this.game, this.locations[6], 'w', 1500),
-        new Spawn(this, this.game, this.locations[7], 'w', 1700)
+        new Spawn(this, this.game, this.locations[7], 'w', 1701)
         ];
     }
 
@@ -117,12 +134,15 @@ to a point over the course of three seconds, or about
 class Spawn {
     /**
      * Creates an enemy Spawn.
+     * Note that if the spawn time ends in 1 (such as "1701"), then that enemy signifies end of wave.
+     * @param {*} wave WaveManager.
      * @param {*} game Game context.
      * @param {*} point A Point object representing an X and Y location in space.
      * @param {*} enemy Character representing enemy; W for Wanderer, C for Chaser.
      * @param {*} waitTime Determines when Spawn should activate. Longer means longer wait.
      */
     constructor(wave, game, point, enemy, waitTime) {
+        this.wave = wave;
         this.game = game;
         this.point = point;
         //Enemy is a char literal corresponding to a certain enemy type.
@@ -133,6 +153,8 @@ class Spawn {
         this.waitTime = waitTime;
         this.isActive = false;
         this.player = wave.player;
+        console.log(waitTime % 10);
+        this.isLast = waitTime % 10 == 1;
     }
 
     /*
@@ -191,7 +213,12 @@ class Spawn {
             default:
                 throw "Spawn was given improper char representing enemy! (see documentation)";
         }
+        this.activeEnemies++;
         gameEngine.addEntity(enemyRef);
+        if (this.isLast) {
+            this.wave.waveIsDoneSpawning = true;
+            console.log("Wave is done, go get 'em!")
+        }
 
     }
 
