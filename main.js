@@ -21,13 +21,12 @@ ASSET_MANAGER.downloadAll(() => {
 
 	gameEngine.init(ctx);
 	gameEngine.addEntity(new PlayerShip(gameEngine));
+	gameEngine.addEntity(new WaveManager(gameEngine));
 	gameEngine.addEntity(new ScoreKeeper(gameEngine));
-	const waves = new WaveManager(gameEngine);
 	
     
 	
 	
 
 	gameEngine.start();
-	waves.devTestWave();
 });

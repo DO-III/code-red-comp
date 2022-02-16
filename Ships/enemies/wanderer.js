@@ -19,6 +19,7 @@ class Wanderer {
         this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Wanderer.svg"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
+        this.wave = this.fetchWave(game);
 
         this.x = point.x;
         this.y = point.y;
@@ -147,12 +148,13 @@ class Wanderer {
               && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
                 entity.removeFromWorld = true;  
                 that.game.addEntity(new Score(that.game, that.xCenter, that.yCenter, 25, 'cyan'));
+                WaveManager.activeEnemies--;
                 that.removeFromWorld = true;
             }
         })
     }
 
-        /*
+    /*
     Fetch the player reference from the game manager.
     */
     fetchPlayer(game) {
@@ -162,4 +164,16 @@ class Wanderer {
         }
         return(foundPlayer);
     }
+
+    /*
+    Fetch the wave manager.
+    */
+    fetchWave(game) {
+        var foundWave;
+        while(typeof foundWave === 'undefined') {
+            foundWave = game.entities.find(entity => entity instanceof PlayerShip);
+        }
+        return(foundWave);
+    }
+
 }

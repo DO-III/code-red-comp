@@ -150,6 +150,7 @@ class Chaser {
                 && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
                 entity.removeFromWorld = true;  
                 that.game.addEntity(new Score(that.game, that.xCenter, that.yCenter, 50, 'red'));
+                WaveManager.activeEnemies--;
                 that.removeFromWorld = true;
             }
         })
