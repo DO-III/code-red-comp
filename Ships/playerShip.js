@@ -108,7 +108,7 @@ class PlayerShip {
     shoot(click){
         this.game.addEntity(new Bullet(this.game,
                                         (this.xCenter - 10), 
-                                        (this.yCenter - 10), click.x - 10, click.y - 10));
+                                        (this.yCenter - 10), click.x - 10, click.y - 10, "PlayerShip"));
         
         //this.bullets.push(new Bullet(this.game, this.x + 12, this.y));
     }
@@ -206,6 +206,11 @@ class PlayerShip {
             */
             if(!(typeof entity.BoundingCircle === 'undefined') && !(entity instanceof PlayerShip || entity instanceof Bullet)
             && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
+                that.dead = true;
+            }
+            //Now check for Dodger rounds
+            if(!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet)
+            && entity.BoundingCircle && entity.parent == "Enemy" && that.BoundingCircle.collide(entity.BoundingCircle)) {
                 that.dead = true;
             }
         })
