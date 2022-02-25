@@ -67,9 +67,11 @@ class PlayerShip {
         ctx.drawImage(myCanvas, this.x, this.y);
 
         //Debug to show bounding circle, keep out of final release.
+        /*
         ctx.beginPath();
         ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, PLAYER_RADIUS, 0, 2 * Math.PI);
         ctx.stroke();
+        */
         }
 
     }
