@@ -5,19 +5,40 @@ Please check the documentation provided in this class if you want to add
 or edit any waves that appear.
 */
 
-const WAVE_TIME_COEFFICIENT = 350;
+const SPAWN_TIME_COEFFICIENT = 350;
+const WAVE_TEXT_BUFFER_TIME = 100;
 
 
 class WaveManager {
 
     static activeEnemies = 0;
+    static enemiesInWave = [];
+
+
+    /*
+    static locations = [
+            //Corners; used for threatening chasing enemies.
+            new Point(12, 12),
+            new Point(737, 12),
+            new Point(12, 537),
+            new Point(737, 537),
+            //Field; give wandering enemies an edge.
+            new Point(374, 70),
+            new Point(130, 269),
+            new Point(620, 269),
+            new Point(374, 460)
+        ];
+*/
 
 
     constructor(game) {
         this.game = game;
         this.player = this.fetchPlayer(this.game);
-        this.enemiesInWave = []; //Holds enemies spawned;
-        this.waveIsDoneSpawning = false;
+        this.waveIsDoneSpawning = true;
+        this.waveIsCompleted = true;
+        this.gameIsOver = false;
+        this.currentWave = 0;
+        this.waveTextTimer = 0;
 
         //Set up basic spawn locations.
         //These are used to handle enemy spawning in the future.
@@ -31,49 +52,101 @@ class WaveManager {
             new Point(374, 70),
             new Point(130, 269),
             new Point(620, 269),
-            new Point(374, 460),
+            new Point(374, 460)
         ];
 
-        this.devTestWave();
+        this.waves = [
+            this.waveOne,
+            this.waveTwo,
+           // this.devTestWave
+        ];
 
-        this.spawnWave();
+        
+
+        
 
 
     }
 
     draw(ctx) {
-        console.log(WaveManager.activeEnemies);
+        //console.log(WaveManager.activeEnemies);
         if(this.player.dead) {
             ctx.strokeText("GAME OVER", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
-        } else if((WaveManager.activeEnemies == 0) && (this.waveIsDoneSpawning)) {
-            ctx.strokeText("YOU WIN", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
+        } else {
+            if (this.gameIsOver) {
+                ctx.strokeText("CONGRATULATIONS!", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
+            }
+        }
+    }
+
+    drawWaveText(ctx) {
+        console.log("yo");
+        if (this.waveTextTimer < WAVE_TEXT_BUFFER_TIME) {
+            ctx.strokeText("WAVE " + (this.currentWave + 1), GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
+            this.waveTextTimer += this.game.clockTick;
+        } else {
+            this.waveTextTimer = 0;
+            
         }
     }
 
     update() {
+        if ((WaveManager.activeEnemies == 0) && this.waveIsDoneSpawning) {
+            this.waveIsCompleted = true;
+        } 
+
+        if (this.waveIsCompleted) {
+            console.log("Wave done, onto the next.")
+            this.currentWave++;
+            this.waveIsCompleted = false;
+            this.waveIsDoneSpawning = false;
+            console.log(this.waves.length);
+            console.log(this.currentWave);
+            if (!((this.currentWave - 1) === this.waves.length)) {
+                this.runGame();
+            } else {
+                this.gameIsOver = true;
+            }
+            
+        }
 
     }
 
     /*
     Spawn all enemies in the wave.
 
+    The wave number is tracked by the WaveManager; this method increments that number,
+    then spawns that wave.
+
     If the player is killed during a wave... well, oops.
     */
-    spawnWave() {
+    runGame() {
         this.waveIsDoneSpawning = false;
         var that = this;
-        this.enemiesInWave.forEach(function(spawn) {
+
+        this.waves[(this.currentWave - 1)](this.locations, this.game, this);
+        console.log(WaveManager.enemiesInWave);
+
+        WaveManager.enemiesInWave.forEach(function(spawn) {
             that.game.addEntity(spawn);
             spawn.isActive = true;
         })
+        console.log(WaveManager.enemiesInWave);
+        //this.enemiesInWave = [];
     }
 
-    devTestWave() {
+    /*
+    Set up testing wave.
+
+    An easy wave so the player can come to grips.
+    */
+
+    devTestWave(l, g, wv) {
         this.enemiesInWave = [
         new Spawn(this, this.game, this.locations[4], 'w', 0),
-        new Spawn(this, this.game, this.locations[5], 'w', 0),
-        new Spawn(this, this.game, this.locations[6], 'w', 0),
-        new Spawn(this, this.game, this.locations[7], 'w', 0),
+        new Spawn(this, this.game, this.locations[5], 'w', 250),
+        new Spawn(this, this.game, this.locations[6], 'w', 500),
+        new Spawn(this, this.game, this.locations[7], 'w', 750),
 	    //this.game.addEntity(new Chaser(this.game));
         
 	    new Spawn(this, this.game, this.locations[0], 'c', 1000),
@@ -89,6 +162,53 @@ class WaveManager {
         new Spawn(this, this.game, this.locations[0], 'd', 2200),
         new Spawn(this, this.game, this.locations[3], 'd', 2201),
         ];
+    }
+
+    /*
+    Set up first wave.
+
+    An easy wave so the player can come to grips.
+    */
+    waveOne(l, g, wv) {
+        console.log(l);
+        WaveManager.enemiesInWave = [
+        new Spawn(wv, g, l[4], 'w', 0),
+        new Spawn(wv, g, l[5], 'w', 0),
+        new Spawn(wv, g, l[6], 'w', 0),
+        new Spawn(wv, g, l[7], 'w', 0),
+
+        new Spawn(wv, g, l[0], 'w', 500),
+        new Spawn(wv, g, l[1], 'w', 500),
+        new Spawn(wv, g, l[2], 'w', 500),
+        new Spawn(wv, g, l[3], 'w', 500),
+
+        new Spawn(wv, g, l[0], 'c', 1000),
+        new Spawn(wv, g, l[1], 'c', 1000),
+        new Spawn(wv, g, l[2], 'c', 1000),
+        new Spawn(wv, g, l[3], 'c', 1001),
+        ];
+    }
+    /*
+    Set up second wave.
+
+    A steady stream of wanderers and chasers
+
+    Also does something fun; it uses loops to automate production!
+    */
+    waveTwo(l, g, wv) {
+        console.log(l);
+
+        for (var i = 0; i < 20; i++) {
+            WaveManager.enemiesInWave.push(
+                new Spawn(wv, g, l[4], 'w', i * 100)
+            )
+            WaveManager.enemiesInWave.push(
+                new Spawn(wv, g, l[7], 'w', i * 150)
+            )
+        }
+
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[0], 'd', 3000));
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[3], 'd', 3001));
     }
 
     fetchPlayer(game) {
@@ -179,9 +299,9 @@ class Spawn {
     update() {
         if (this.isActive) {
             if(this.waitTime > 0) {
-                this.waitTime -= (this.game.clockTick * WAVE_TIME_COEFFICIENT);
+                this.waitTime -= (this.game.clockTick * SPAWN_TIME_COEFFICIENT);
             } else {
-                this.radius -= (this.game.clockTick * WAVE_TIME_COEFFICIENT);
+                this.radius -= (this.game.clockTick * SPAWN_TIME_COEFFICIENT);
                 this.checkIsDone();
             }
         }
