@@ -5,8 +5,8 @@ const ShGW_CENTER = SHARD_WIDTH / 2; //Measures center of graphic, x-value.
 const ShGH_CENTER = SHARD_HEIGHT / 2; //Center of graphic, y-value.
 
 const SHARD_RADIUS = 17.5; //Size of Splitter bounding circle.
-const SHARD_MOVE_RATE = 12.5; //Speed at which Splitter moves.
-const SHARD_FRICTION = 0.99; //Rate at which Splitter loses speed. Lower = slower.
+const SHARD_MOVE_RATE = 7.5; //Speed at which Splitter moves.
+const SHARD_FRICTION = 0.999; //Rate at which Splitter loses speed. Lower = slower.
 
 /* 
 Splitter Shards are fast enemies that spawn from Splitters.
@@ -17,7 +17,7 @@ class SplitterShard {
     constructor(game, point) {
         //Initialize element.
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/SplitterShard.png"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/splitter_shard.png"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
         console.log(this.player);
 
@@ -31,10 +31,11 @@ class SplitterShard {
         this.BoundingCircle = new BoundingCircle(SHARD_RADIUS, this.xCenter, this.yCenter);
 
 
-
+        this.spawnMovement();
         this.playerX = 0;
         this.playerY = 0;
         this.lastShot = 0;
+        WaveManager.activeEnemies++;
 
     }
 
@@ -44,10 +45,10 @@ class SplitterShard {
         myCanvas.height = SHARD_HEIGHT;
         var myCtx = myCanvas.getContext('2d');
         myCtx.save();
-        myCtx.translate (ShGW_CENTER, h); //This should go to the center of the object.
+        myCtx.translate (ShGW_CENTER, ShGH_CENTER); //This should go to the center of the object.
         this.angle = this.rotateHandle();
         myCtx.rotate (this.angle);
-        myCtx.translate (-(ShGW_CENTER), -(h));
+        myCtx.translate (-(ShGW_CENTER), -(ShGW_CENTER));
         myCtx.drawImage(this.imageAsset, 12, 12);
         myCtx.restore();
 
@@ -103,15 +104,28 @@ class SplitterShard {
     */
     updateCenter() {
         this.xCenter = this.x + ShGW_CENTER;
-        this.yCenter = this.y + h;
+        this.yCenter = this.y + ShGH_CENTER;
         this.BoundingCircle = new BoundingCircle(SHARD_RADIUS, this.xCenter, this.yCenter);
     }
 
-    shoot() {
-        this.game.addEntity(new Bullet(this.game,(this.xCenter - 10),(this.yCenter - 10), this.player.xCenter-5, this.player.yCenter-5 , "Enemy",-3));
-        this.game.addEntity(new Bullet(this.game,(this.xCenter - 10),(this.yCenter - 10), this.player.xCenter, this.player.yCenter , "Enemy",-2));
-        this.game.addEntity(new Bullet(this.game,(this.xCenter - 10),(this.yCenter - 10), this.player.xCenter+5, this.player.yCenter+5 , "Enemy",-1));
+    /*
+    Generate a random direction to move in.
+    
+    This is used specifically when the Shard spawns.
+    */
+    spawnMovement() {
+        let effectiveMoveRate = SHARD_MOVE_RATE * this.game.clockTick;
+
+        //Spin for a random direction.
+        let toMoveIn = Math.floor(Math.random() * 360);
+        toMoveIn *= (Math.PI / 180);
+
+        this.angle = Math.floor(toMoveIn);
+        this.dX += Math.cos(this.angle) * effectiveMoveRate * 20;
+        this.dY += Math.sin(this.angle) * effectiveMoveRate * 20;
+
     }
+
 
     /*
     Calculate the vector that will be used to move the bullets.
@@ -132,7 +146,7 @@ class SplitterShard {
         }
 
         var dx = (this.playerX) - (this.x + ShGW_CENTER); //Accounting for difference in center of thing.
-        var dy = (this.playerY) - (this.y + h);
+        var dy = (this.playerY) - (this.y + ShGH_CENTER);
 
         return (Math.atan2(dy, dx) + (Math.PI / 2));
     }
@@ -154,7 +168,7 @@ class SplitterShard {
             if(!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet && entity.parent == "PlayerShip")
                 && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
                 entity.removeFromWorld = true;  
-                that.game.addEntity(new Score(that.game, that.xCenter, that.yCenter, 50, 'red'));
+                that.game.addEntity(new Score(that.game, that.xCenter, that.yCenter, 25, 'yellow'));
                 WaveManager.activeEnemies--;
                 that.removeFromWorld = true;
             }

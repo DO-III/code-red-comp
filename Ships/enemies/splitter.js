@@ -4,9 +4,9 @@ const SPLITTER_HEIGHT = 75; //Should match graphic in final.
 const SGW_CENTER = SPLITTER_WIDTH / 2; //Measures center of graphic, x-value.
 const SGH_CENTER = SPLITTER_HEIGHT / 2; //Center of graphic, y-value.
 
-const SPLITTER_RADIUS = 17.5; //Size of Splitter bounding circle.
-const SPLITTER_MOVE_RATE = 5.5; //Speed at which Splitter moves.
-const SPLITTER_FRICTION = 0.99; //Rate at which Splitter loses speed. Lower = slower.
+const SPLITTER_RADIUS = 25; //Size of Splitter bounding circle.
+const SPLITTER_MOVE_RATE = 1.5; //Speed at which Splitter moves.
+const SPLITTER_FRICTION = 0.996; //Rate at which Splitter loses speed. Lower = slower.
 
 /* 
 Splitters are slow enemies that split into three Splitter Shards on death.
@@ -18,7 +18,7 @@ class Splitter {
     constructor(game, point) {
         //Initialize element.
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Splitter.png"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/splitter.png"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
         console.log(this.player);
 
@@ -108,12 +108,6 @@ class Splitter {
         this.BoundingCircle = new BoundingCircle(SPLITTER_RADIUS, this.xCenter, this.yCenter);
     }
 
-    shoot() {
-        this.game.addEntity(new Bullet(this.game,(this.xCenter - 10),(this.yCenter - 10), this.player.xCenter-5, this.player.yCenter-5 , "Enemy",-3));
-        this.game.addEntity(new Bullet(this.game,(this.xCenter - 10),(this.yCenter - 10), this.player.xCenter, this.player.yCenter , "Enemy",-2));
-        this.game.addEntity(new Bullet(this.game,(this.xCenter - 10),(this.yCenter - 10), this.player.xCenter+5, this.player.yCenter+5 , "Enemy",-1));
-    }
-
     /*
     Calculate the vector that will be used to move the bullets.
 
@@ -155,11 +149,23 @@ class Splitter {
             if(!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet && entity.parent == "PlayerShip")
                 && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
                 entity.removeFromWorld = true;  
-                that.game.addEntity(new Score(that.game, that.xCenter, that.yCenter, 50, 'red'));
+                that.game.addEntity(new Score(that.game, that.xCenter, that.yCenter, 50, 'yellow'));
+                let deathPoint = new Point(that.x, that.y);
+                
+                that.spawnShards(deathPoint);
+                
+
                 WaveManager.activeEnemies--;
                 that.removeFromWorld = true;
             }
         })
+    }
+
+    spawnShards(deathPoint) {
+       // console.log(deathPoint);
+        for(let i = 0; i < 3; i++) {
+            this.game.addEntity(new SplitterShard(this.game, deathPoint));
+        }
     }
 
     collideLeft() {  

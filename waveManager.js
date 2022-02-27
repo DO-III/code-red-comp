@@ -70,7 +70,10 @@ class WaveManager {
 
     devTestWave() {
         this.enemiesInWave = [
-        new Spawn(this, this.game, this.locations[4], 's', 0),
+        new Spawn(this, this.game, this.locations[0], 's', 0),
+        new Spawn(this, this.game, this.locations[1], 's', 0),
+        new Spawn(this, this.game, this.locations[2], 's', 0),
+        new Spawn(this, this.game, this.locations[3], 's', 0),
         /*new Spawn(this, this.game, this.locations[4], 'w', 0),
         new Spawn(this, this.game, this.locations[5], 'w', 0),
         new Spawn(this, this.game, this.locations[6], 'w', 0),
