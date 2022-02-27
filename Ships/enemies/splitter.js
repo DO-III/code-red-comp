@@ -55,9 +55,11 @@ class Splitter {
         ctx.drawImage(myCanvas, this.x, this.y);
 
         //Debug to show bounding circle, keep out of final release.
+        /*
         ctx.beginPath();
         ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, SPLITTER_RADIUS, 0, 2 * Math.PI, false);
         ctx.stroke();
+        */
     }
 
     update() {

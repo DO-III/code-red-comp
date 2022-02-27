@@ -169,7 +169,7 @@ class WaveManager {
     waveTwo(l, g, wv) {
         console.log(l);
 
-        for (var i = 0; i < 20; i++) {
+        for (var i = 0; i < 15; i++) {
             WaveManager.enemiesInWave.push(
                 new Spawn(wv, g, l[4], 'w', i * 100)
             )
@@ -177,7 +177,8 @@ class WaveManager {
                 new Spawn(wv, g, l[7], 'w', i * 150)
             )
         }
-
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[1], 's', 3000));
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[2], 's', 3000));
         WaveManager.enemiesInWave.push(new Spawn(wv, g, l[0], 'd', 3000));
         WaveManager.enemiesInWave.push(new Spawn(wv, g, l[3], 'd', 3001));
     }
