@@ -136,35 +136,6 @@ class WaveManager {
     }
 
     /*
-    Set up testing wave.
-
-    An easy wave so the player can come to grips.
-    */
-
-    devTestWave(l, g, wv) {
-        this.enemiesInWave = [
-        new Spawn(this, this.game, this.locations[4], 'w', 0),
-        new Spawn(this, this.game, this.locations[5], 'w', 250),
-        new Spawn(this, this.game, this.locations[6], 'w', 500),
-        new Spawn(this, this.game, this.locations[7], 'w', 750),
-	    //this.game.addEntity(new Chaser(this.game));
-        
-	    new Spawn(this, this.game, this.locations[0], 'c', 1000),
-        new Spawn(this, this.game, this.locations[1], 'c', 1000),
-        new Spawn(this, this.game, this.locations[2], 'c', 1000),
-        new Spawn(this, this.game, this.locations[3], 'c', 1000),
-
-        new Spawn(this, this.game, this.locations[4], 'w', 1100),
-        new Spawn(this, this.game, this.locations[5], 'w', 1300),
-        new Spawn(this, this.game, this.locations[6], 'w', 1500),
-        new Spawn(this, this.game, this.locations[7], 'w', 1700),
-
-        new Spawn(this, this.game, this.locations[0], 'd', 2200),
-        new Spawn(this, this.game, this.locations[3], 'd', 2201),
-        ];
-    }
-
-    /*
     Set up first wave.
 
     An easy wave so the player can come to grips.
@@ -337,6 +308,10 @@ class Spawn {
             case 'd' :
             case 'D' :
                 enemyRef = new Dodger(this.game, this.point);
+                break;
+            case 's' :
+            case 'S' :
+                enemyRef = new Splitter(this.game, this.point);
                 break;
             default:
                 throw "Spawn was given improper char representing enemy! (see documentation)";
