@@ -7,6 +7,7 @@ ASSET_MANAGER.queueDownload("./Ships/gfx/Wanderer.svg");
 ASSET_MANAGER.queueDownload("./Ships/gfx/Bullet.svg");
 ASSET_MANAGER.queueDownload("./Ships/gfx/explosion.svg");
 ASSET_MANAGER.queueDownload("./Ships/gfx/Dodger.svg");
+ASSET_MANAGER.queueDownload("./Ships/gfx/Splitter.png");
 ASSET_MANAGER.queueDownload("./backdrop.svg");
 //Add all images here.
 
@@ -21,6 +22,7 @@ ASSET_MANAGER.downloadAll(() => {
 	
 
 	gameEngine.init(ctx);
+	gameEngine.addEntity(new Splitter(gameEngine));
 	gameEngine.addEntity(new PlayerShip(gameEngine));
 	gameEngine.addEntity(new WaveManager(gameEngine));
 	gameEngine.addEntity(new ScoreKeeper(gameEngine));

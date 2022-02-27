@@ -15,7 +15,7 @@ class Splitter {
     constructor(game) {
         //Initialize element.
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Chaser.svg"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Splitter.png"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
         console.log(this.player);
 
