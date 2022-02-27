@@ -1,24 +1,23 @@
-const SPLITTER_WIDTH = 75; //Should match graphic in final.
-const SPLITTER_HEIGHT = 75; //Should match graphic in final.
+const SHARD_WIDTH = 75; //Should match graphic in final.
+const SHARD_HEIGHT = 75; //Should match graphic in final.
 
-const SGW_CENTER = SPLITTER_WIDTH / 2; //Measures center of graphic, x-value.
-const SGH_CENTER = SPLITTER_HEIGHT / 2; //Center of graphic, y-value.
+const ShGW_CENTER = SHARD_WIDTH / 2; //Measures center of graphic, x-value.
+const ShGH_CENTER = SHARD_HEIGHT / 2; //Center of graphic, y-value.
 
-const SPLITTER_RADIUS = 17.5; //Size of Splitter bounding circle.
-const SPLITTER_MOVE_RATE = 5.5; //Speed at which Splitter moves.
-const SPLITTER_FRICTION = 0.99; //Rate at which Splitter loses speed. Lower = slower.
+const SHARD_RADIUS = 17.5; //Size of Splitter bounding circle.
+const SHARD_MOVE_RATE = 12.5; //Speed at which Splitter moves.
+const SHARD_FRICTION = 0.99; //Rate at which Splitter loses speed. Lower = slower.
 
 /* 
-Splitters are slow enemies that split into three Splitter Shards on death.
+Splitter Shards are fast enemies that spawn from Splitters.
 
-They are clumsy and often bump into walls. Their children are less so,
-essentially being Chasers with less restraint.
+They are reckless and charge quickly.
 */
-class Splitter {
+class SplitterShard {
     constructor(game, point) {
         //Initialize element.
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Splitter.png"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/SplitterShard.png"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
         console.log(this.player);
 
@@ -29,7 +28,7 @@ class Splitter {
         this.xCenter = 0;
         this.yCenter = 0;
         this.updateCenter();
-        this.BoundingCircle = new BoundingCircle(SPLITTER_RADIUS, this.xCenter, this.yCenter);
+        this.BoundingCircle = new BoundingCircle(SHARD_RADIUS, this.xCenter, this.yCenter);
 
 
 
@@ -41,14 +40,14 @@ class Splitter {
 
     draw(ctx) {
         var myCanvas = document.createElement('canvas');
-        myCanvas.width = SPLITTER_WIDTH;
-        myCanvas.height = SPLITTER_HEIGHT;
+        myCanvas.width = SHARD_WIDTH;
+        myCanvas.height = SHARD_HEIGHT;
         var myCtx = myCanvas.getContext('2d');
         myCtx.save();
-        myCtx.translate (SGW_CENTER, SGH_CENTER); //This should go to the center of the object.
+        myCtx.translate (ShGW_CENTER, h); //This should go to the center of the object.
         this.angle = this.rotateHandle();
         myCtx.rotate (this.angle);
-        myCtx.translate (-(SGW_CENTER), -(SGH_CENTER));
+        myCtx.translate (-(ShGW_CENTER), -(h));
         myCtx.drawImage(this.imageAsset, 12, 12);
         myCtx.restore();
 
@@ -56,7 +55,7 @@ class Splitter {
 
         //Debug to show bounding circle, keep out of final release.
         ctx.beginPath();
-        ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, SPLITTER_RADIUS, 0, 2 * Math.PI, false);
+        ctx.arc(this.BoundingCircle.xCenter, this.BoundingCircle.yCenter, SHARD_RADIUS, 0, 2 * Math.PI, false);
         ctx.stroke();
     }
 
@@ -77,8 +76,8 @@ class Splitter {
         this.calcMovement(this.xCenter, this.playerX, this.yCenter, this.playerY);
         this.x += this.dX;
         this.y += this.dY;
-        this.dX *= SPLITTER_FRICTION;
-        this.dY *= SPLITTER_FRICTION;
+        this.dX *= SHARD_FRICTION;
+        this.dY *= SHARD_FRICTION;
         this.edgeDetect();
         this.updateCenter();
         
@@ -103,9 +102,9 @@ class Splitter {
     For the bounding circle.
     */
     updateCenter() {
-        this.xCenter = this.x + SGW_CENTER;
-        this.yCenter = this.y + SGH_CENTER;
-        this.BoundingCircle = new BoundingCircle(SPLITTER_RADIUS, this.xCenter, this.yCenter);
+        this.xCenter = this.x + ShGW_CENTER;
+        this.yCenter = this.y + h;
+        this.BoundingCircle = new BoundingCircle(SHARD_RADIUS, this.xCenter, this.yCenter);
     }
 
     shoot() {
@@ -120,7 +119,7 @@ class Splitter {
     Accomplished through the magic of polar coordinates.
     */
     calcMovement(p1X, p2X, p1Y, p2Y) {
-        let effectiveMoveRate = SPLITTER_MOVE_RATE * this.game.clockTick;
+        let effectiveMoveRate = SHARD_MOVE_RATE * this.game.clockTick;
 
         this.angle = Math.atan2(p2Y - p1Y, p2X - p1X);
         this.dX += Math.cos(this.angle) * effectiveMoveRate;
@@ -132,8 +131,8 @@ class Splitter {
             return(0); //If player doesn't exist, don't rotate.
         }
 
-        var dx = (this.playerX) - (this.x + SGW_CENTER); //Accounting for difference in center of thing.
-        var dy = (this.playerY) - (this.y + SGH_CENTER);
+        var dx = (this.playerX) - (this.x + ShGW_CENTER); //Accounting for difference in center of thing.
+        var dy = (this.playerY) - (this.y + h);
 
         return (Math.atan2(dy, dx) + (Math.PI / 2));
     }
@@ -163,19 +162,19 @@ class Splitter {
     }
 
     collideLeft() {  
-        return((this.xCenter - SPLITTER_RADIUS) < 0)
+        return((this.xCenter - SHARD_RADIUS) < 0)
     }
 
     collideRight() {
-        return((this.xCenter + SPLITTER_RADIUS) > GAME_WORLD_WIDTH)
+        return((this.xCenter + SHARD_RADIUS) > GAME_WORLD_WIDTH)
     }
 
     collideUp() {
-        return((this.yCenter - SPLITTER_RADIUS) < 0)
+        return((this.yCenter - SHARD_RADIUS) < 0)
     }
 
     collideDown() {
-        return((this.yCenter + SPLITTER_RADIUS) > GAME_WORLD_HEIGHT)
+        return((this.yCenter + SHARD_RADIUS) > GAME_WORLD_HEIGHT)
     }
 
     edgeDetect() {
