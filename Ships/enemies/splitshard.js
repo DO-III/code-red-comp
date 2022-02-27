@@ -4,7 +4,7 @@ const SHARD_HEIGHT = 75; //Should match graphic in final.
 const ShGW_CENTER = SHARD_WIDTH / 2; //Measures center of graphic, x-value.
 const ShGH_CENTER = SHARD_HEIGHT / 2; //Center of graphic, y-value.
 
-const SHARD_RADIUS = 17.5; //Size of Splitter bounding circle.
+const SHARD_RADIUS = 15; //Size of Splitter bounding circle.
 const SHARD_MOVE_RATE = 7.5; //Speed at which Splitter moves.
 const SHARD_FRICTION = 0.999; //Rate at which Splitter loses speed. Lower = slower.
 
@@ -17,7 +17,7 @@ class SplitterShard {
     constructor(game, point) {
         //Initialize element.
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/splitter_shard.png"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/SplitterShard.svg"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
         console.log(this.player);
 
@@ -121,8 +121,8 @@ class SplitterShard {
         toMoveIn *= (Math.PI / 180);
 
         this.angle = Math.floor(toMoveIn);
-        this.dX += Math.cos(this.angle) * effectiveMoveRate * 20;
-        this.dY += Math.sin(this.angle) * effectiveMoveRate * 20;
+        this.dX += Math.cos(this.angle) * effectiveMoveRate * 32.5;
+        this.dY += Math.sin(this.angle) * effectiveMoveRate * 32.5;
 
     }
 
