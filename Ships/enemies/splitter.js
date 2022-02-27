@@ -5,22 +5,20 @@ const SGW_CENTER = SPLITTER_WIDTH / 2; //Measures center of graphic, x-value.
 const SGH_CENTER = SPLITTER_HEIGHT / 2; //Center of graphic, y-value.
 
 const SPLITTER_RADIUS = 17.5; //Size of Splitter bounding circle.
-const SPLITTER_MOVE_RATE = 10.5; //Speed at which Splitter moves.
-const SPLITTER_FRICTION = 0.5; //Rate at which Splitter loses speed. Lower = slower.
-
-const SPLITTER_SHOOT_RATE = 1; // Controls the time between the Dodger's shots.
+const SPLITTER_MOVE_RATE = 5.5; //Speed at which Splitter moves.
+const SPLITTER_FRICTION = 0.99; //Rate at which Splitter loses speed. Lower = slower.
 
 
 class Splitter {
-    constructor(game) {
+    constructor(game, point) {
         //Initialize element.
         this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Splitter.png"); //Messy hardcode, fix later.
         this.player = this.fetchPlayer(game);
         console.log(this.player);
 
-        this.x = 10;
-        this.y = 100;
+        this.x = point.x;
+        this.y = point.y;
         this.dX = 0;
         this.dY = 0;
         this.xCenter = 0;
@@ -80,11 +78,6 @@ class Splitter {
         this.updateCenter();
         
         this.lastShot += this.game.clockTick;
-        //If mouse exists, is down, and shot not on cooldown, fire.
-        if (!this.dead && this.lastShot > SPLITTER_SHOOT_RATE) {
-            this.shoot();
-            this.lastShot = 0;
-        }
 
     }
 

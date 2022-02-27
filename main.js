@@ -22,7 +22,6 @@ ASSET_MANAGER.downloadAll(() => {
 	
 
 	gameEngine.init(ctx);
-	gameEngine.addEntity(new Splitter(gameEngine));
 	gameEngine.addEntity(new PlayerShip(gameEngine));
 	gameEngine.addEntity(new WaveManager(gameEngine));
 	gameEngine.addEntity(new ScoreKeeper(gameEngine));

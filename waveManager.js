@@ -70,7 +70,8 @@ class WaveManager {
 
     devTestWave() {
         this.enemiesInWave = [
-        new Spawn(this, this.game, this.locations[4], 'w', 0),
+        new Spawn(this, this.game, this.locations[4], 's', 0),
+        /*new Spawn(this, this.game, this.locations[4], 'w', 0),
         new Spawn(this, this.game, this.locations[5], 'w', 0),
         new Spawn(this, this.game, this.locations[6], 'w', 0),
         new Spawn(this, this.game, this.locations[7], 'w', 0),
@@ -87,7 +88,7 @@ class WaveManager {
         new Spawn(this, this.game, this.locations[7], 'w', 1700),
 
         new Spawn(this, this.game, this.locations[0], 'd', 2200),
-        new Spawn(this, this.game, this.locations[3], 'd', 2201),
+        new Spawn(this, this.game, this.locations[3], 'd', 2201),*/
         ];
     }
 
@@ -217,6 +218,10 @@ class Spawn {
             case 'd' :
             case 'D' :
                 enemyRef = new Dodger(this.game, this.point);
+                break;
+            case 's' :
+            case 'S' :
+                enemyRef = new Splitter(this.game, this.point);
                 break;
             default:
                 throw "Spawn was given improper char representing enemy! (see documentation)";
