@@ -9,7 +9,7 @@ const WGW_CENTER = WANDERER_WIDTH / 2; //Measures center of graphic, x-value.
 const WGH_CENTER = WANDERER_HEIGHT / 2; //Center of graphic, y-value.
 
 const WANDERER_RADIUS = 20; //Size of Wanderer bounding circle.
-const WANDERER_MOVE_RATE = 2.5; //Speed at which Wanderer moves.
+const WANDERER_MOVE_RATE = 200; //Speed at which Wanderer moves.
 const WANDERER_FRICTION = 1; //Rate at which Chaser loses speed. Lower = slower.
 
 
@@ -30,9 +30,15 @@ class Wanderer {
         this.updateCenter();
         this.BoundingCircle = new BoundingCircle(WANDERER_RADIUS, this.xCenter, this.yCenter);
 
+        //The wanderer moves at a constant speed,
+        //so this is isolated for clarity.
+        this.effectiveMoveRate = WANDERER_MOVE_RATE * this.game.clockTick;
+
         //Pick a random direction and start moving.
         this.angle = Math.random() * Math.PI * 2; //Random angle.
         this.calcMovement();
+        
+        
         
 
     }
@@ -68,10 +74,13 @@ class Wanderer {
         }
 
         //Get current location.
+        //this.calcMovement();
         this.updateCenter();
         this.updateDirection();
+        
         this.x += this.dX;
         this.y += this.dY;
+        
     }
 
     /*
@@ -124,8 +133,12 @@ class Wanderer {
     This is much simpler than others.
     */
     calcMovement() {
-        this.dX += Math.cos(this.angle) * WANDERER_MOVE_RATE;
-        this.dY += Math.sin(this.angle) * WANDERER_MOVE_RATE;
+        
+
+        this.dX += Math.cos(this.angle) * this.effectiveMoveRate;
+        this.dY += Math.sin(this.angle) * this.effectiveMoveRate;
+
+        
     }
 
     rotate() {
