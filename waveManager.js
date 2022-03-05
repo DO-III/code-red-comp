@@ -22,7 +22,7 @@ class WaveManager {
         this.waveIsDoneSpawning = true;
         this.waveIsCompleted = true;
         this.gameIsOver = false;
-        this.currentWave = 0;
+        this.currentWave = 3;
         this.waveTextTimer = 0;
 
         //Set up basic spawn locations.
@@ -43,6 +43,8 @@ class WaveManager {
         this.waves = [
             this.waveOne,
             this.waveTwo,
+            this.waveThree,
+            this.waveFour,
            // this.devTestWave
         ];
 
@@ -90,8 +92,6 @@ class WaveManager {
             }
 
         } else if (this.player.dead) {
-            console.log("he's dead, jim")
-            console.log(this.game.restart)
             if (this.game.restart) {
                 this.resetGame();
             }
@@ -152,59 +152,141 @@ class WaveManager {
     */
     resetGame() {
         this.currentWave = 1;
+        this.enemiesInWave = [];
         this.gameIsOver = false;
         this.gameIsReset = true;
         this.player.spawnPlayer();
         this.runGame();
     }
 
+    /**
+     * Generate values for corner positions based on input.
+     * @param {*} value Value to work with. 
+     * @returns value % 4; 0, 1, 2, or 3.
+     */
+    static modPosA(value) {
+        return(value % 4);
+    }
+
+    /**
+     * Generate values for center positions based on input.
+     * @param {*} value Value to work with. 
+     * @returns value % 4 + 4; 4, 5, 6 or 7.
+     */
+    static modPosB(value) {
+        return(WaveManager.modPosA(value) + 4);
+    }
+
+    
+
     /*
     Set up first wave.
 
     An easy wave so the player can come to grips.
+    A few Wanderers, a few chasers.
     */
     waveOne(l, g, wv) {
-        console.log(l);
-        WaveManager.enemiesInWave = [
-        new Spawn(wv, g, l[4], 'w', 0),
-        new Spawn(wv, g, l[5], 'w', 0),
-        new Spawn(wv, g, l[6], 'w', 0),
-        new Spawn(wv, g, l[7], 'w', 0),
 
-        new Spawn(wv, g, l[0], 'w', 500),
-        new Spawn(wv, g, l[1], 'w', 500),
-        new Spawn(wv, g, l[2], 'w', 500),
-        new Spawn(wv, g, l[3], 'w', 500),
+        //Steady stream of Wanderers in the center.
+        for(var i = 0; i < 8; i++) {
+            WaveManager.enemiesInWave.push(
+            new Spawn(wv, g, l[WaveManager.modPosB(i)], 'w', i * 500)
+            )
+        }
+        
+        for(var i = 0; i < 7; i++) {
+            let use = WaveManager.modPosA(i);
+            WaveManager.enemiesInWave.push(
+            new Spawn(wv, g, l[WaveManager.modPosA(i)], 'c', i * 500 + 4000)
+            )
+        }
 
-        new Spawn(wv, g, l[0], 'c', 1000),
-        new Spawn(wv, g, l[1], 'c', 1000),
-        new Spawn(wv, g, l[2], 'c', 1000),
-        new Spawn(wv, g, l[3], 'c', 1001),
-        ];
+        //And a harcode to ensure the last enemy spawns.
+        WaveManager.enemiesInWave.push(
+            new Spawn(wv, g, l[3], 'c', 7501)
+            )
     }
     /*
     Set up second wave.
 
-    A steady stream of wanderers and chasers
-
-    Also does something fun; it uses loops to automate production!
+    A steady stream of wanderers and chasers, with a surprise at the end.
     */
     waveTwo(l, g, wv) {
-        console.log(l);
 
+        //A steady trickle of Wanderers.
         for (var i = 0; i < 15; i++) {
             WaveManager.enemiesInWave.push(
-                new Spawn(wv, g, l[4], 'w', i * 100)
+                new Spawn(wv, g, l[4], 'w', i * 200)
             )
             WaveManager.enemiesInWave.push(
-                new Spawn(wv, g, l[7], 'w', i * 150)
+                new Spawn(wv, g, l[7], 'w', i * 200 + 50)
             )
         }
-        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[1], 's', 3000));
-        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[2], 's', 3000));
-        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[0], 'd', 3000));
-        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[3], 'd', 3001));
+        
+        //And some chasers to spice things up.
+        for (var i = 0; i < 7; i++) {
+            WaveManager.enemiesInWave.push(new Spawn(wv, g, l[0], 'c', i * 300 + 3000));
+            WaveManager.enemiesInWave.push(new Spawn(wv, g, l[3], 'c', i * 300 + 3000));
+
+        }
+        
+        //Surprise! It's a Dodger!
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[1], 'd', 5500));
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[2], 'd', 5501));
     }
+    /*
+    Set up third wave.
+
+    A slower wave, introducing Splitters and complicating things with Wanderers.
+    */
+    waveThree(l, g, wv) {
+        //Splitters spawn occasionally in the center.
+        for (var i = 0; i < 8; i++) {
+            WaveManager.enemiesInWave.push(
+                new Spawn(wv, g, l[WaveManager.modPosB(i)], 's', i * 1000)
+            )
+        }
+        
+        //With a trickle of wanderers.
+        for (var i = 0; i < 20; i++) {
+            WaveManager.enemiesInWave.push(new Spawn(wv, g, l[WaveManager.modPosA(i)], 'w', i * 250 + 1000));
+            WaveManager.enemiesInWave.push(new Spawn(wv, g, l[WaveManager.modPosA(i + 2)], 'w', i * 250 + 1000));
+
+        }
+
+        //And a last set of four for good measure.
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[0], 'w', 6000));
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[1], 'w', 6000));
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[2], 'w', 6000));
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[3], 'w', 6001));
+    }
+    /*
+    Set up fourth wave.
+
+    I hope you like Dodgers.
+    */
+    waveFour(l, g, wv) {
+        //...because you're getting a lot of them.
+        for (var i = 0; i < 8; i++) {
+            WaveManager.enemiesInWave.push(
+                new Spawn(wv, g, l[WaveManager.modPosA(i)], 'd', i * 1500)
+            )
+        }
+        
+        //And a few chasers.
+        for (var i = 0; i < 16; i++) {
+            WaveManager.enemiesInWave.push(new Spawn(wv, g, l[WaveManager.modPosA(i)], 'c', i * 500 + 1500));
+            WaveManager.enemiesInWave.push(new Spawn(wv, g, l[WaveManager.modPosA(i + 1)], 'c', i * 500 + 1500));
+
+        }
+
+        //And a last set of four Wanderers.
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[0], 'w', 12000));
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[1], 'w', 12000));
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[2], 'w', 12000));
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[3], 'w', 12001));
+    }
+    
 
     fetchPlayer(game) {
         var foundPlayer;
@@ -272,7 +354,6 @@ class Spawn {
         this.waitTime = waitTime;
         this.isActive = false;
         this.player = wave.player;
-        console.log(waitTime % 10);
         this.isLast = waitTime % 10 == 1;
     }
 
@@ -292,6 +373,11 @@ class Spawn {
     Update circle size.
     */
     update() {
+        console.log(this.wave.player.dead);
+        if (this.wave.player.dead) {
+            console.log("nope")
+            this.removeFromWorld = true;
+        }
         if (this.isActive) {
             if(this.waitTime > 0) {
                 this.waitTime -= (this.game.clockTick * SPAWN_TIME_COEFFICIENT);
@@ -343,7 +429,6 @@ class Spawn {
         gameEngine.addEntity(enemyRef);
         if (this.isLast) {
             this.wave.waveIsDoneSpawning = true;
-            console.log("Wave is done, go get 'em!")
         }
 
     }
