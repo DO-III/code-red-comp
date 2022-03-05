@@ -47,6 +47,7 @@ class PlayerShip {
 
     */
     spawnPlayer() {
+        this.deathAnimation.resetLoops();
         this.drawMe = true;
         this.dead = false;
         this.x = GAME_WORLD_WIDTH / 2 - 40;
@@ -100,6 +101,8 @@ class PlayerShip {
     Update player's state.
     */
     update() {
+        console.log(this.deathAnimation.loops());
+        //This causes problems with the player being seen again...
         if (this.deathAnimation.loops() > 30) {
             this.drawMe = false;
         }

@@ -44,6 +44,14 @@ class Animator {
         return (Math.floor(this.framesConsumed / this.frameCount));
     }
 
+    /*
+    Reset the number of times an animation has looped.
+    */
+    resetLoops() {
+        this.framesConsumed = 0;
+        this.elapsedTime = 0;
+    }
+
 
 
 }
