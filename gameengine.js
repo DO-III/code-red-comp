@@ -78,6 +78,8 @@ class GameEngine {
                 case "ArrowDown":
                     that.down = true;
                     break;
+                case "KeyR":
+                    that.restart = true;
             }
         }, false);
 
@@ -101,6 +103,8 @@ class GameEngine {
                 case "ArrowDown":
                     that.down = false;
                     break;
+                case "KeyR":
+                    that.restart = false;
             }
         }, false);
 

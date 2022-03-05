@@ -73,7 +73,6 @@ class WaveManager {
     }
 
     drawWaveText(ctx) {
-        console.log("yo");
         if (this.waveTextTimer < WAVE_TEXT_BUFFER_TIME) {
             ctx.strokeText("WAVE " + (this.currentWave + 1), GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
             this.waveTextTimer += this.game.clockTick;
@@ -89,32 +88,34 @@ class WaveManager {
                 this.beginGame = true;
                 this.player.spawnPlayer();
             }
-            console.log(this.beginGame)
 
+        } else if (this.player.dead) {
+            console.log("he's dead, jim")
+            console.log(this.game.restart)
+            if (this.game.restart) {
+                this.resetGame();
+            }
 
         } else {
 
+            if ((WaveManager.activeEnemies == 0) && this.waveIsDoneSpawning) {
+                this.waveIsCompleted = true;
+            } 
 
-        
-
-        if ((WaveManager.activeEnemies == 0) && this.waveIsDoneSpawning) {
-            this.waveIsCompleted = true;
-        } 
-
-        if (this.waveIsCompleted) {
-            console.log("Wave done, onto the next.")
-            this.currentWave++;
-            this.waveIsCompleted = false;
-            this.waveIsDoneSpawning = false;
-            console.log(this.waves.length);
-            console.log(this.currentWave);
-            if (!((this.currentWave - 1) === this.waves.length)) {
-                this.runGame();
-            } else {
-                this.gameIsOver = true;
+            if (this.waveIsCompleted) {
+                console.log("Wave done, onto the next.")
+                this.currentWave++;
+                this.waveIsCompleted = false;
+                this.waveIsDoneSpawning = false;
+                console.log(this.waves.length);
+                console.log(this.currentWave);
+                if (!((this.currentWave - 1) === this.waves.length)) {
+                    this.runGame();
+                } else {
+                    this.gameIsOver = true;
+                }
+                
             }
-            
-        }
         }
 
     }
@@ -130,6 +131,7 @@ class WaveManager {
     runGame() {
         this.waveIsDoneSpawning = false;
         var that = this;
+        console.log(this.currentWave);
 
         this.waves[(this.currentWave - 1)](this.locations, this.game, this);
         WaveManager.activeEnemies = 0;
@@ -149,7 +151,11 @@ class WaveManager {
     This resets the wave counter back to 0.
     */
     resetGame() {
-        this.currentWave = 0;
+        this.currentWave = 1;
+        this.gameIsOver = false;
+        this.gameIsReset = true;
+        this.player.spawnPlayer();
+        this.runGame();
     }
 
     /*
