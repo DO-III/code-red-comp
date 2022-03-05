@@ -9,7 +9,7 @@ const BGW_CENTER = BG_WIDTH / 2;
 const BGH_CENTER = BG_HEIGHT / 2;
 
 const BULLET_ASSET = ASSET_MANAGER.getAsset("./Ships/gfx/Bullet.svg");
-const BULLET_SPEED = 500;
+const BULLET_SPEED = 650;
 
 const BULLET_RADIUS = 3;
 

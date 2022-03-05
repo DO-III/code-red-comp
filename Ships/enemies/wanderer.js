@@ -30,9 +30,6 @@ class Wanderer {
         this.updateCenter();
         this.BoundingCircle = new BoundingCircle(WANDERER_RADIUS, this.xCenter, this.yCenter);
 
-        //The wanderer moves at a constant speed,
-        //so this is isolated for clarity.
-        this.effectiveMoveRate = WANDERER_MOVE_RATE * this.game.clockTick;
 
         //Pick a random direction and start moving.
         this.angle = Math.random() * Math.PI * 2; //Random angle.
@@ -78,8 +75,8 @@ class Wanderer {
         this.updateCenter();
         this.updateDirection();
         
-        this.x += this.dX;
-        this.y += this.dY;
+        this.x += this.dX * this.game.clockTick;
+        this.y += this.dY * this.game.clockTick;
         
     }
 
@@ -135,8 +132,8 @@ class Wanderer {
     calcMovement() {
         
 
-        this.dX += Math.cos(this.angle) * this.effectiveMoveRate;
-        this.dY += Math.sin(this.angle) * this.effectiveMoveRate;
+        this.dX += Math.cos(this.angle) * WANDERER_MOVE_RATE;
+        this.dY += Math.sin(this.angle) * WANDERER_MOVE_RATE;
 
         
     }
