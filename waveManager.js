@@ -15,25 +15,10 @@ class WaveManager {
     static enemiesInWave = [];
 
 
-    /*
-    static locations = [
-            //Corners; used for threatening chasing enemies.
-            new Point(12, 12),
-            new Point(737, 12),
-            new Point(12, 537),
-            new Point(737, 537),
-            //Field; give wandering enemies an edge.
-            new Point(374, 70),
-            new Point(130, 269),
-            new Point(620, 269),
-            new Point(374, 460)
-        ];
-*/
-
-
     constructor(game) {
         this.game = game;
         this.player = this.fetchPlayer(this.game);
+        this.beginGame = false;
         this.waveIsDoneSpawning = true;
         this.waveIsCompleted = true;
         this.gameIsOver = false;
@@ -69,18 +54,25 @@ class WaveManager {
     }
 
     draw(ctx) {
+        ctx.strokeStyle = 'green';
         //console.log(WaveManager.activeEnemies);
+        if (this.beginGame === false) {
+            ctx.strokeText("CLICK TO BEGIN", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
+        } else {
+
+
         if(this.player.dead) {
-            ctx.strokeText("GAME OVER", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
+            ctx.strokeText("GAME OVER", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2 - 20);
+            ctx.strokeText("R TO RETRY", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2 + 20);
         } else {
             if (this.gameIsOver) {
                 ctx.strokeText("CONGRATULATIONS!", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
             }
         }
+        }
     }
 
     drawWaveText(ctx) {
-        console.log("yo");
         if (this.waveTextTimer < WAVE_TEXT_BUFFER_TIME) {
             ctx.strokeText("WAVE " + (this.currentWave + 1), GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
             this.waveTextTimer += this.game.clockTick;
@@ -91,23 +83,39 @@ class WaveManager {
     }
 
     update() {
-        if ((WaveManager.activeEnemies == 0) && this.waveIsDoneSpawning) {
-            this.waveIsCompleted = true;
-        } 
-
-        if (this.waveIsCompleted) {
-            console.log("Wave done, onto the next.")
-            this.currentWave++;
-            this.waveIsCompleted = false;
-            this.waveIsDoneSpawning = false;
-            console.log(this.waves.length);
-            console.log(this.currentWave);
-            if (!((this.currentWave - 1) === this.waves.length)) {
-                this.runGame();
-            } else {
-                this.gameIsOver = true;
+        if (this.beginGame === false) {
+            if (this.game.click != null) {
+                this.beginGame = true;
+                this.player.spawnPlayer();
             }
-            
+
+        } else if (this.player.dead) {
+            console.log("he's dead, jim")
+            console.log(this.game.restart)
+            if (this.game.restart) {
+                this.resetGame();
+            }
+
+        } else {
+
+            if ((WaveManager.activeEnemies == 0) && this.waveIsDoneSpawning) {
+                this.waveIsCompleted = true;
+            } 
+
+            if (this.waveIsCompleted) {
+                console.log("Wave done, onto the next.")
+                this.currentWave++;
+                this.waveIsCompleted = false;
+                this.waveIsDoneSpawning = false;
+                console.log(this.waves.length);
+                console.log(this.currentWave);
+                if (!((this.currentWave - 1) === this.waves.length)) {
+                    this.runGame();
+                } else {
+                    this.gameIsOver = true;
+                }
+                
+            }
         }
 
     }
@@ -123,8 +131,10 @@ class WaveManager {
     runGame() {
         this.waveIsDoneSpawning = false;
         var that = this;
+        console.log(this.currentWave);
 
         this.waves[(this.currentWave - 1)](this.locations, this.game, this);
+        WaveManager.activeEnemies = 0;
         console.log(WaveManager.enemiesInWave);
 
         WaveManager.enemiesInWave.forEach(function(spawn) {
@@ -133,6 +143,19 @@ class WaveManager {
         })
         console.log(WaveManager.enemiesInWave);
         //this.enemiesInWave = [];
+    }
+
+    /*
+    In case the player dies, restart the game.
+
+    This resets the wave counter back to 0.
+    */
+    resetGame() {
+        this.currentWave = 1;
+        this.gameIsOver = false;
+        this.gameIsReset = true;
+        this.player.spawnPlayer();
+        this.runGame();
     }
 
     /*
@@ -287,7 +310,6 @@ class Spawn {
             this.spawnEnemyAtPoint();
             this.removeFromWorld = true;
         } else if (this.player.dead) {
-            console.log(this.player);
             this.removeFromWorld = true;
         }
     }

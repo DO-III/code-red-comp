@@ -13,6 +13,7 @@ class ScoreKeeper {
     */
     constructor(game) {
         this.game = game;
+        this.waveManager = this.getWaveManager(game);
         this.score = 0;
     }
 
@@ -26,7 +27,26 @@ class ScoreKeeper {
         ctx.strokeText(this.score, GAME_WORLD_WIDTH/2, 30);
     }
 
+    /*
+    Fetch the player reference from the game manager.
+    */
+    getWaveManager(game) {
+        var foundManager;
+        while(typeof foundManager === 'undefined') {
+            foundManager = game.entities.find(entity => entity instanceof WaveManager);
+        }
+        return(foundManager);
+    }
+
+    /*
+    Reset the player's score whenever the game is restarted.
+    */
     update() {
+        if(this.waveManager.gameIsReset) {
+            this.score = 0;
+            this.waveManager.gameIsReset = false;
+            
+        }
 
     }
 }

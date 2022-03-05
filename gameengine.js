@@ -63,34 +63,23 @@ class GameEngine {
             switch(e.code) {
                 //Player Movement with WASD
                 case "KeyA":
+                case "ArrowLeft":
                     that.left = true;
                     break;
                 case "KeyD":
+                case "ArrowRight":
                     that.right = true;
                     break;
                 case "KeyW":
+                case "ArrowUp":
                     that.up = true;
                     break;
                 case "KeyS":
+                case "ArrowDown":
                     that.down = true;
                     break;
-                //Shooting controls with arrow keys.
-                case "ArrowLeft":
-                    that.shootLeft = false;
-                    break;
-                case "ArrowRight":
-                    that.shootRight = false;
-                    break;
-                case "ArrowUp":
-                    that.shootUp = true;
-                    break;
-                case "ArrowDown":
-                    that.shootDown = true;
-                    break;
-                //Pause.
-                case "Escape":
-                    that.escape = true;
-                    break;
+                case "KeyR":
+                    that.restart = true;
             }
         }, false);
 
@@ -99,34 +88,23 @@ class GameEngine {
             switch(e.code) {
                 //Player Movement with WASD
                 case "KeyA":
+                case "ArrowLeft":
                     that.left = false;
                     break;
                 case "KeyD":
+                case "ArrowRight":
                     that.right = false;
                     break;
                 case "KeyW":
+                case "ArrowUp":
                     that.up = false;
                     break;
                 case "KeyS":
+                case "ArrowDown":
                     that.down = false;
                     break;
-                //Shooting controls with arrow keys.
-                case "ArrowLeft":
-                    that.shootLeft = false;
-                    break;
-                case "ArrowRight":
-                    that.shootRight = false;
-                    break;
-                case "ArrowUp":
-                    that.shootUp = true;
-                    break;
-                case "ArrowDown":
-                    that.shootDown = true;
-                    break;
-                //Pause.
-                case "Escape":
-                    that.escape = false;
-                    break;
+                case "KeyR":
+                    that.restart = false;
             }
         }, false);
 
