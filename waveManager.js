@@ -22,7 +22,7 @@ class WaveManager {
         this.waveIsDoneSpawning = true;
         this.waveIsCompleted = true;
         this.gameIsOver = false;
-        this.currentWave = 3;
+        this.currentWave = 0;
         this.waveTextTimer = 0;
 
         //Set up basic spawn locations.
