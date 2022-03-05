@@ -90,8 +90,6 @@ class WaveManager {
             }
 
         } else if (this.player.dead) {
-            console.log("he's dead, jim")
-            console.log(this.game.restart)
             if (this.game.restart) {
                 this.resetGame();
             }
@@ -152,19 +150,51 @@ class WaveManager {
     */
     resetGame() {
         this.currentWave = 1;
+        this.enemiesInWave = [];
         this.gameIsOver = false;
         this.gameIsReset = true;
         this.player.spawnPlayer();
         this.runGame();
     }
 
+    /**
+     * Generate values for corner positions based on input.
+     * @param {*} value Value to work with. 
+     * @returns value % 4; 0, 1, 2, or 3.
+     */
+    static modPosA(value) {
+        return(value % 4);
+    }
+
+    /**
+     * Generate values for center positions based on input.
+     * @param {*} value Value to work with. 
+     * @returns value % 4 + 4; 4, 5, 6 or 7.
+     */
+    static modPosB(value) {
+        return(WaveManager.modPosA(value) + 4);
+    }
+
+    
+
     /*
     Set up first wave.
 
     An easy wave so the player can come to grips.
+    A few Wanderers, a few chasers.
     */
     waveOne(l, g, wv) {
-        console.log(l);
+
+        //Steady stream of Wanderers in the center.
+        for(var i = 0; i < 8; i++) {
+            let use = WaveManager.modPosB(i);
+            console.log(use);
+            WaveManager.enemiesInWave.push(
+            new Spawn(wv, g, l[use], 'w', i * 500)
+            )
+        }
+
+        /*
         WaveManager.enemiesInWave = [
         new Spawn(wv, g, l[4], 'w', 0),
         new Spawn(wv, g, l[5], 'w', 0),
@@ -181,6 +211,7 @@ class WaveManager {
         new Spawn(wv, g, l[2], 'c', 1000),
         new Spawn(wv, g, l[3], 'c', 1001),
         ];
+        */
     }
     /*
     Set up second wave.
@@ -190,7 +221,7 @@ class WaveManager {
     Also does something fun; it uses loops to automate production!
     */
     waveTwo(l, g, wv) {
-        console.log(l);
+
 
         for (var i = 0; i < 15; i++) {
             WaveManager.enemiesInWave.push(
@@ -272,7 +303,6 @@ class Spawn {
         this.waitTime = waitTime;
         this.isActive = false;
         this.player = wave.player;
-        console.log(waitTime % 10);
         this.isLast = waitTime % 10 == 1;
     }
 
@@ -292,6 +322,11 @@ class Spawn {
     Update circle size.
     */
     update() {
+        console.log(this.wave.player.dead);
+        if (this.wave.player.dead) {
+            console.log("nope")
+            this.removeFromWorld = true;
+        }
         if (this.isActive) {
             if(this.waitTime > 0) {
                 this.waitTime -= (this.game.clockTick * SPAWN_TIME_COEFFICIENT);
@@ -343,7 +378,6 @@ class Spawn {
         gameEngine.addEntity(enemyRef);
         if (this.isLast) {
             this.wave.waveIsDoneSpawning = true;
-            console.log("Wave is done, go get 'em!")
         }
 
     }
