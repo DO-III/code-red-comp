@@ -62,7 +62,8 @@ class WaveManager {
 
 
         if(this.player.dead) {
-            ctx.strokeText("GAME OVER", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
+            ctx.strokeText("GAME OVER", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2 - 20);
+            ctx.strokeText("R TO RETRY", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2 + 20);
         } else {
             if (this.gameIsOver) {
                 ctx.strokeText("CONGRATULATIONS!", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
@@ -140,6 +141,15 @@ class WaveManager {
         })
         console.log(WaveManager.enemiesInWave);
         //this.enemiesInWave = [];
+    }
+
+    /*
+    In case the player dies, restart the game.
+
+    This resets the wave counter back to 0.
+    */
+    resetGame() {
+        this.currentWave = 0;
     }
 
     /*
