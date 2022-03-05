@@ -18,7 +18,8 @@ class PlayerShip {
     constructor(game) {
         
         this.playerCanDie = true;
-        this.dead = false;
+        this.dead = true;
+        this.drawMe = false;
 
         this.game = game;
         this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Player.png"); //Messy hardcode, fix later.
@@ -41,11 +42,29 @@ class PlayerShip {
     }
 
     /*
+    "Spawns" the player ship by resetting its position.
+
+
+    */
+    spawnPlayer() {
+        this.drawMe = true;
+        this.dead = false;
+        this.x = GAME_WORLD_WIDTH / 2 - 40;
+        this.y = GAME_WORLD_HEIGHT / 2 - 45;
+        this.xCenter = 0;
+        this.yCenter = 0;
+        this.updateCenter();
+        
+    }
+
+    /*
     Draw the PlayerShip.
 
     Rotates to point to the cursor.
     */
     draw(ctx) {
+
+        if (this.drawMe) {
 
         if(this.dead) {
             this.deathAnimation.drawFrame(this.game.clockTick, ctx, this.x + 10, this.y + 10);
@@ -73,6 +92,7 @@ class PlayerShip {
         ctx.stroke();
         */
         }
+        }
 
     }
 
@@ -81,8 +101,7 @@ class PlayerShip {
     */
     update() {
         if (this.deathAnimation.loops() > 30) {
-            this.removeFromWorld = true;
-            WaveManager.activeEnemies = -1;
+            this.drawMe = false;
         }
 
         this.moveHandle();

@@ -15,25 +15,10 @@ class WaveManager {
     static enemiesInWave = [];
 
 
-    /*
-    static locations = [
-            //Corners; used for threatening chasing enemies.
-            new Point(12, 12),
-            new Point(737, 12),
-            new Point(12, 537),
-            new Point(737, 537),
-            //Field; give wandering enemies an edge.
-            new Point(374, 70),
-            new Point(130, 269),
-            new Point(620, 269),
-            new Point(374, 460)
-        ];
-*/
-
-
     constructor(game) {
         this.game = game;
         this.player = this.fetchPlayer(this.game);
+        this.beginGame = false;
         this.waveIsDoneSpawning = true;
         this.waveIsCompleted = true;
         this.gameIsOver = false;
@@ -69,13 +54,20 @@ class WaveManager {
     }
 
     draw(ctx) {
+        ctx.strokeStyle = 'green';
         //console.log(WaveManager.activeEnemies);
+        if (this.beginGame === false) {
+            ctx.strokeText("CLICK TO BEGIN", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
+        } else {
+
+
         if(this.player.dead) {
             ctx.strokeText("GAME OVER", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
         } else {
             if (this.gameIsOver) {
                 ctx.strokeText("CONGRATULATIONS!", GAME_WORLD_WIDTH/2, GAME_WORLD_HEIGHT/2);
             }
+        }
         }
     }
 
@@ -91,6 +83,19 @@ class WaveManager {
     }
 
     update() {
+        if (this.beginGame === false) {
+            if (this.game.click != null) {
+                this.beginGame = true;
+                this.player.spawnPlayer();
+            }
+            console.log(this.beginGame)
+
+
+        } else {
+
+
+        
+
         if ((WaveManager.activeEnemies == 0) && this.waveIsDoneSpawning) {
             this.waveIsCompleted = true;
         } 
@@ -109,6 +114,7 @@ class WaveManager {
             }
             
         }
+        }
 
     }
 
@@ -125,6 +131,7 @@ class WaveManager {
         var that = this;
 
         this.waves[(this.currentWave - 1)](this.locations, this.game, this);
+        WaveManager.activeEnemies = 0;
         console.log(WaveManager.enemiesInWave);
 
         WaveManager.enemiesInWave.forEach(function(spawn) {
@@ -287,7 +294,6 @@ class Spawn {
             this.spawnEnemyAtPoint();
             this.removeFromWorld = true;
         } else if (this.player.dead) {
-            console.log(this.player);
             this.removeFromWorld = true;
         }
     }
