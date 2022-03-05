@@ -168,7 +168,8 @@ class SplitterShard {
             If that's true, actually detect collision.
             */
             if(!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet && entity.parent == "PlayerShip")
-                && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
+                && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)
+                && that.removeFromWorld != true) {
                 entity.removeFromWorld = true;  
                 that.game.addEntity(new Score(that.game, that.xCenter, that.yCenter, 25, 'yellow'));
                 WaveManager.activeEnemies--;
@@ -196,11 +197,11 @@ class SplitterShard {
     edgeDetect() {
         if(this.collideLeft() || this.collideRight()) {
             this.x += (this.collideLeft() ? 1 : -1);
-            this.dX *= -0.1;
+            this.dX *= -0.5;
         }
 
         if(this.collideUp() || this.collideDown()) {
-            this.dY *= -0.1;
+            this.dY *= -0.5;
         }
     }
 

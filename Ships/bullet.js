@@ -9,11 +9,9 @@ const BGW_CENTER = BG_WIDTH / 2;
 const BGH_CENTER = BG_HEIGHT / 2;
 
 const BULLET_ASSET = ASSET_MANAGER.getAsset("./Ships/gfx/Bullet.svg");
-const BULLET_SPEED = 10;
+const BULLET_SPEED = 650;
 
 const BULLET_RADIUS = 3;
-
-//const BulletUtils = new GameConstants();
 
 
 class Bullet {
@@ -87,8 +85,8 @@ class Bullet {
     in the direction it was fired.
     */
     update() {
-        this.x += this.dX;
-        this.y += this.dY;
+        this.x += this.dX * this.game.clockTick;
+        this.y += this.dY * this.game.clockTick;
         this.updateCenter();
 
         //Ugly canvas size hardcode to remove.

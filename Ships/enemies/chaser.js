@@ -149,7 +149,8 @@ class Chaser {
             If that's true, actually detect collision.
             */
             if(!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet && entity.parent == "PlayerShip")
-                && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
+                && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)
+                && that.removeFromWorld != true) {
                 entity.removeFromWorld = true;  
                 that.game.addEntity(new Score(that.game, that.xCenter, that.yCenter, 50, 'red'));
                 WaveManager.activeEnemies--;

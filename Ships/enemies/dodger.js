@@ -219,7 +219,8 @@ class Dodger {
             If that's true, actually detect collision.
             */
             if (!(typeof entity.BoundingCircle === 'undefined') && (entity instanceof Bullet)
-                && (entity.parent == "PlayerShip") && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)) {
+                && (entity.parent == "PlayerShip") && entity.BoundingCircle && that.BoundingCircle.collide(entity.BoundingCircle)
+                && that.removeFromWorld != true) {
                 entity.removeFromWorld = true;
                 that.game.addEntity(new Score(that.game, that.xCenter, that.yCenter, 100, 'fuchsia'));
                 WaveManager.activeEnemies--;

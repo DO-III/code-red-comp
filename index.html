@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Code RED</title>
-  
+    <!--JavaScript Imports-->
     <script type="text/javascript" src="./assetmanager.js"></script>
     <script type="text/javascript" src="./timer.js"></script>
     <script type="text/javascript" src="./gameengine.js"></script>
@@ -23,9 +23,31 @@
     <script type="text/javascript" src="./Ships/gameConstants.js"></script>
     <script type="text/javascript" src="./waveManager.js"></script>
     <script type="text/javascript" src="./scoremanager.js"></script>
+
+    <!--CSS Styling-->
+    <style>
+        body{
+            background-color: #001000;
+            color:lightgreen
+        }
+
+
+
+
+    </style>
+
+
+
 </head>
 <body>
-    <canvas id="gameWorld" width="800" height="600" style="background: rgb(1, 29, 1); border: 1px solid black"
+    <center>
+    <canvas id="gameWorld" width="800" height="600" style="background: rgb(0, 25, 0); border: 1px solid black"
             tabindex="0" autofocus ></canvas>
+    <p>
+        WASD to move, mouse to shoot.<br><br>
+
+        Shoot everything. Don't get touched or shot.
+    </p>
+    </center>
 </body>
 </html>
