@@ -22,7 +22,7 @@ class WaveManager {
         this.waveIsDoneSpawning = true;
         this.waveIsCompleted = true;
         this.gameIsOver = false;
-        this.currentWave = 0;
+        this.currentWave = 1;
         this.waveTextTimer = 0;
 
         //Set up basic spawn locations.
@@ -187,54 +187,50 @@ class WaveManager {
 
         //Steady stream of Wanderers in the center.
         for(var i = 0; i < 8; i++) {
-            let use = WaveManager.modPosB(i);
-            console.log(use);
             WaveManager.enemiesInWave.push(
-            new Spawn(wv, g, l[use], 'w', i * 500)
+            new Spawn(wv, g, l[WaveManager.modPosB(i)], 'w', i * 500)
+            )
+        }
+        
+        for(var i = 0; i < 7; i++) {
+            let use = WaveManager.modPosA(i);
+            WaveManager.enemiesInWave.push(
+            new Spawn(wv, g, l[WaveManager.modPosA(i)], 'c', i * 500 + 4000)
             )
         }
 
-        /*
-        WaveManager.enemiesInWave = [
-        new Spawn(wv, g, l[4], 'w', 0),
-        new Spawn(wv, g, l[5], 'w', 0),
-        new Spawn(wv, g, l[6], 'w', 0),
-        new Spawn(wv, g, l[7], 'w', 0),
-
-        new Spawn(wv, g, l[0], 'w', 500),
-        new Spawn(wv, g, l[1], 'w', 500),
-        new Spawn(wv, g, l[2], 'w', 500),
-        new Spawn(wv, g, l[3], 'w', 500),
-
-        new Spawn(wv, g, l[0], 'c', 1000),
-        new Spawn(wv, g, l[1], 'c', 1000),
-        new Spawn(wv, g, l[2], 'c', 1000),
-        new Spawn(wv, g, l[3], 'c', 1001),
-        ];
-        */
+        //And a harcode to ensure the last enemy spawns.
+        WaveManager.enemiesInWave.push(
+            new Spawn(wv, g, l[3], 'c', 7501)
+            )
     }
     /*
     Set up second wave.
 
-    A steady stream of wanderers and chasers
-
-    Also does something fun; it uses loops to automate production!
+    A steady stream of wanderers and chasers, with a surprise at the end.
     */
     waveTwo(l, g, wv) {
 
-
+        //A steady trickle of Wanderers.
         for (var i = 0; i < 15; i++) {
             WaveManager.enemiesInWave.push(
-                new Spawn(wv, g, l[4], 'w', i * 100)
+                new Spawn(wv, g, l[4], 'w', i * 200)
             )
             WaveManager.enemiesInWave.push(
-                new Spawn(wv, g, l[7], 'w', i * 150)
+                new Spawn(wv, g, l[7], 'w', i * 200 + 50)
             )
         }
-        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[1], 's', 3000));
-        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[2], 's', 3000));
-        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[0], 'd', 3000));
-        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[3], 'd', 3001));
+        
+        //And some chasers to spice things up.
+        for (var i = 0; i < 7; i++) {
+            WaveManager.enemiesInWave.push(new Spawn(wv, g, l[0], 'c', i * 300 + 3000));
+            WaveManager.enemiesInWave.push(new Spawn(wv, g, l[3], 'c', i * 300 + 3000));
+
+        }
+        
+        //Surprise! It's a Dodger!
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[1], 'd', 5500));
+        WaveManager.enemiesInWave.push(new Spawn(wv, g, l[2], 'd', 5501));
     }
 
     fetchPlayer(game) {
