@@ -22,8 +22,8 @@ class PlayerShip {
         this.drawMe = false;
 
         this.game = game;
-        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Player.png"); //Messy hardcode, fix later.
-        this.explodeAsset = ASSET_MANAGER.getAsset("./Ships/gfx/explosion.svg"); //Messy hardcode, fix later.
+        this.imageAsset = ASSET_MANAGER.getAsset("./Ships/gfx/Player.png");
+        this.explodeAsset = ASSET_MANAGER.getAsset("./Ships/gfx/explosion.svg");
         this.deathAnimation = new Animator(this.explodeAsset, 0, 0, 50, 50, 3, 0.1, true);
 
         this.x = GAME_WORLD_WIDTH / 2 - 40;
@@ -175,6 +175,7 @@ class PlayerShip {
         this.xVelocity *= PLAYER_FRICTION;
         this.yVelocity *= PLAYER_FRICTION;
 
+        this.updateCenter();
         this.edgeDetect();
 
         this.updateCenter();
@@ -241,13 +242,30 @@ class PlayerShip {
     }
 
     edgeDetect() {
-        if(this.collideLeft() || this.collideRight()) {
-            this.xVelocity *= -1;
+        if(this.collideLeft()) {
+            this.x = PLAYER_RADIUS - PGW_CENTER;
+            if (this.xVelocity < 0) {
+                this.xVelocity *= -1;
+            }
+        } else if (this.collideRight()) {
+            this.x = GAME_WORLD_WIDTH - PLAYER_RADIUS - PGW_CENTER;
+            if (this.xVelocity > 0) {
+                this.xVelocity *= -1;
+            }
         }
 
-        if(this.collideUp() || this.collideDown()) {
-            this.yVelocity *= -1;
+        if(this.collideUp()) {
+            this.y = PLAYER_RADIUS - PGH_CENTER;
+            if (this.yVelocity < 0) {
+                this.yVelocity *= -1;
+            }
+        } else if (this.collideDown()) {
+            this.y = GAME_WORLD_HEIGHT - PLAYER_RADIUS - PGH_CENTER;
+            if (this.yVelocity > 0) {
+                this.yVelocity *= -1;
+            }
         }
+
     }
 
     collideLeft() {  
