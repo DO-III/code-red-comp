@@ -1,14 +1,22 @@
-const PG_WIDTH = 70; //Should match player graphic in final.
-const PG_HEIGHT = 70; //Should match player graphic in final.
+/**Width of player graphic; do not change.*/
+const PG_WIDTH = 70;
+/**Height of player graphic; do not change.*/
+const PG_HEIGHT = 70;
 
-const PGW_CENTER = PG_WIDTH / 2; //Measures center of player graphic, x-value.
+/**WMeasures center of player graphic width; do not change.*/
+const PGW_CENTER = PG_WIDTH / 2; 
+/**HMeasures center of player graphic height; do not change.*/
 const PGH_CENTER = PG_HEIGHT / 2; //Center of player graphic, y-value.
 
-const PLAYER_MOVE_RATE= 45; //Rate at which player accelerates.
+/**Player movement speed.*/
+const PLAYER_MOVE_RATE= 45;
+/**Friction of player object; higher value means the player slows down quicker. Do not adjust past 1.*/
 const PLAYER_FRICTION = 0.90; //Rate at which speed decreases. Lower = slower.
-const PLAYER_RADIUS = 15; //Radius of player.
+/**Radius of player's collision circle. */
+const PLAYER_RADIUS = 15;
 
-const PLAYER_FIRING_COOLDOWN = 0.1; //Rate that player is allowed to fire.
+/**Player firing rate, measure in (tenths of a) second. */
+const PLAYER_FIRING_COOLDOWN = 0.1;
 
 class PlayerShip {
 
@@ -41,10 +49,9 @@ class PlayerShip {
         this.angle;         //Direction player points in, 0 is straight up...?
     }
 
-    /*
-    "Spawns" the player ship by resetting its position.
-
-
+    /**
+    "Spawns" the player ship by resetting its position and setting default attributes.
+    When the player dies and respawns, or when the game begins, this is called.
     */
     spawnPlayer() {
         this.deathAnimation.resetLoops();
