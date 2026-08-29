@@ -8,6 +8,7 @@ Use them sparingly as they are exceptionally dangerous.
 
 Credit to Sidise Tasisa for the "detecting player and bullet" logic.
 */
+//TODO: Completely undocumented class...
 const DODGER_WIDTH = 50;
 const DODGER_HEIGHT = 50;
 const DGW_CENTER = DODGER_WIDTH / 2;

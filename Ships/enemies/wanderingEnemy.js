@@ -1,7 +1,6 @@
-/*
-Shared behavior for enemies that drift in a direction without actively chasing
-
-the player.
+/**
+Shared behavior for enemies that drift in a direction without actively chasing the player.
+Currently this only includes the Wanderer but could include other enemies later.
 
 This layer centralizes the movement and turning logic for simple roamers while
 keeping their individual scoring, collision, and special behavior in each

@@ -3,7 +3,7 @@ Chasers pursue the player relentlessly with some concept of velocity.
 
 They move strictly toward the player taking the most direct route possible.
 */
-
+//TODO: Completely undocumented class...
 const CHASER_WIDTH = 75;
 const CHASER_HEIGHT = 75;
 const CGW_CENTER = CHASER_WIDTH / 2;

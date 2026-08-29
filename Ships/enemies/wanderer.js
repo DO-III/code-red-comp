@@ -1,7 +1,7 @@
 /*
 Wanderers... wander.
 */
-
+//TODO: Completely undocumented class...
 const WANDERER_WIDTH = 50;
 const WANDERER_HEIGHT = 50;
 const WGW_CENTER = WANDERER_WIDTH / 2;

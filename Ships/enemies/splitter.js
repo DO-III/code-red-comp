@@ -13,6 +13,7 @@ Splitters are slow enemies that split into three Splitter Shards on death.
 They are clumsy and often bump into walls. Their children are less so,
 essentially being Chasers with less restraint.
 */
+//TODO: Completely undocumented class...
 class Splitter extends AbstractEnemy {
     constructor(game, point) {
         super(game, point, {

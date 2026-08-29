@@ -12,6 +12,7 @@ Splitter Shards are fast enemies that spawn from Splitters.
 
 They are reckless and charge quickly.
 */
+//TODO: Completely undocumented class...
 class SplitterShard extends AbstractEnemy {
     constructor(game, point) {
         super(game, point, {
